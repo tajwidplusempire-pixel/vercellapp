@@ -2,7 +2,7 @@
 <html lang="ms" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
   <title>FREE GAME HUB — Portal Game Online Percuma</title>
   <meta name="description" content="Koleksi permainan interaktif Bahasa Melayu & Matematik secara percuma tanpa daftar akaun dari Tajwid Plus Empire.">
   <meta property="og:title" content="FREE GAME HUB — Portal Game Online Percuma">
@@ -41,43 +41,54 @@
   </script>
 
   <style>
+    /* Glassmorphism Styling */
     .glassmorphism {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
     .dark .glassmorphism {
-      background: rgba(15, 23, 42, 0.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(15, 23, 42, 0.94);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
+
     .hero-gradient {
       background: linear-gradient(135deg, rgba(236,72,153,0.12) 0%, rgba(139,92,246,0.16) 50%, rgba(59,130,246,0.12) 100%);
     }
     .dark .hero-gradient {
       background: linear-gradient(135deg, rgba(236,72,153,0.15) 0%, rgba(109,40,217,0.3) 50%, rgba(30,58,138,0.25) 100%);
     }
+
     .card-hover {
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
     .card-hover:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 18px 30px -10px rgba(139, 92, 246, 0.3);
+      transform: translateY(-5px);
+      box-shadow: 0 16px 30px -10px rgba(139, 92, 246, 0.3);
     }
+
     @keyframes cuteFloat {
       0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
-      50% { transform: translateY(-7px) rotate(2.5deg) scale(1.04); }
+      50% { transform: translateY(-6px) rotate(2.5deg) scale(1.04); }
     }
     .icon-3d-float {
       animation: cuteFloat 3.8s ease-in-out infinite;
-      filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.22));
+      filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.2));
     }
     .clay-surface {
-      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.65), inset 0 -4px 6px rgba(0, 0, 0, 0.14), 0 10px 20px -5px rgba(0,0,0,0.18);
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.7), inset 0 -4px 6px rgba(0, 0, 0, 0.15), 0 10px 20px -5px rgba(0,0,0,0.2);
     }
-    #toast {
-      transition: transform 0.3s ease, opacity 0.3s ease;
+
+    /* Mobile App Tab Transition */
+    .tab-view {
+      animation: fadeInTab 0.25s ease-out forwards;
     }
+    @keyframes fadeInTab {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     /* Fullscreen Theater Mode */
     .game-theater-mode {
       position: fixed !important;
@@ -91,23 +102,28 @@
       border: none !important;
       margin: 0 !important;
     }
-    /* Safe padding for mobile bottom nav dock */
+
+    /* Safe Area Padding for Mobile Bottom Dock */
     @media (max-width: 767px) {
       body {
-        padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+        padding-bottom: calc(5.2rem + env(safe-area-inset-bottom, 0px));
+        -webkit-tap-highlight-color: transparent;
+      }
+      body.in-gameplay {
+        padding-bottom: 0 !important;
       }
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col font-sans">
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col font-sans select-none sm:select-auto">
 
-  <!-- TOP HEADER (Desktop & Mobile) -->
-  <header class="sticky top-0 z-40 glassmorphism border-b border-slate-200/80 dark:border-slate-800/80 transition-all duration-300">
+  <!-- TOP HEADER (Desktop & Mobile status header) -->
+  <header id="main-header" class="sticky top-0 z-40 glassmorphism border-b border-slate-200/80 dark:border-slate-800/80 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16 sm:h-20">
         
         <!-- Brand Logo -->
-        <a href="#home" onclick="navigateTo('home'); return false;" class="flex items-center gap-3 group focus:outline-none">
+        <a href="#home" onclick="switchAppTab('home'); return false;" class="flex items-center gap-3 group focus:outline-none">
           <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-pink via-brand-purple to-brand-blue flex items-center justify-center text-white shadow-md shadow-purple-500/25 group-hover:rotate-6 transition-transform">
             <i class="fa-solid fa-gamepad text-xl"></i>
           </div>
@@ -115,30 +131,30 @@
             <span class="text-xl sm:text-2xl font-black bg-gradient-to-r from-brand-pink via-brand-purple to-brand-blue bg-clip-text text-transparent">
               FREE GAME HUB
             </span>
-            <span class="hidden sm:inline-block text-[10px] uppercase font-bold tracking-widest text-slate-400 block -mt-1">Tajwid Plus Empire</span>
+            <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block -mt-1">Tajwid Plus Empire</span>
           </div>
         </a>
 
         <!-- Desktop Navigation Links -->
-        <nav class="hidden md:flex items-center gap-1.5 lg:gap-2">
-          <button onclick="navigateTo('home')" class="nav-btn-home px-3.5 py-2 rounded-xl text-sm font-semibold hover:text-brand-purple hover:bg-purple-50 dark:hover:bg-slate-800/80 transition flex items-center gap-2">
-            <i class="fa-solid fa-house opacity-70"></i> Home
+        <nav class="hidden md:flex items-center gap-2">
+          <button onclick="switchAppTab('home')" id="desk-nav-home" class="desk-nav-item px-4 py-2 rounded-xl text-sm font-bold bg-purple-100 dark:bg-purple-950/70 text-brand-purple dark:text-purple-300 transition flex items-center gap-2">
+            <i class="fa-solid fa-house"></i> Home
           </button>
-          <button onclick="navigateTo('all-games')" class="nav-btn-all px-3.5 py-2 rounded-xl text-sm font-semibold hover:text-brand-purple hover:bg-purple-50 dark:hover:bg-slate-800/80 transition flex items-center gap-2">
+          <button onclick="switchAppTab('all-games')" id="desk-nav-all" class="desk-nav-item px-4 py-2 rounded-xl text-sm font-semibold hover:text-brand-purple hover:bg-purple-50 dark:hover:bg-slate-800/80 transition flex items-center gap-2">
             <i class="fa-solid fa-shapes opacity-70"></i> Semua Game
           </button>
-          <button onclick="navigateTo('categories-section')" class="nav-btn-cat px-3.5 py-2 rounded-xl text-sm font-semibold hover:text-brand-purple hover:bg-purple-50 dark:hover:bg-slate-800/80 transition flex items-center gap-2">
+          <button onclick="switchAppTab('categories')" id="desk-nav-cat" class="desk-nav-item px-4 py-2 rounded-xl text-sm font-semibold hover:text-brand-purple hover:bg-purple-50 dark:hover:bg-slate-800/80 transition flex items-center gap-2">
             <i class="fa-solid fa-layer-group opacity-70"></i> Kategori
+          </button>
+          <button onclick="switchAppTab('other-products')" id="desk-nav-products" class="desk-nav-item px-4 py-2 rounded-xl text-sm font-semibold hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/40 text-amber-600 dark:text-amber-400 transition flex items-center gap-2">
+            <i class="fa-solid fa-crown text-amber-500"></i> Bahan Lain
           </button>
         </nav>
 
-        <!-- Right Action Buttons -->
-        <div class="flex items-center gap-2 sm:gap-3">
-          <button onclick="focusSearch()" aria-label="Cari Game" class="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-purple-50 dark:hover:bg-slate-800 transition">
-            <i class="fa-solid fa-magnifying-glass text-lg"></i>
-          </button>
-          <button id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Tukar Tema" class="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-purple-50 dark:hover:bg-slate-800 transition">
-            <i id="theme-icon" class="fa-solid fa-moon text-lg"></i>
+        <!-- Right Quick Action (Theme Toggle) -->
+        <div class="flex items-center gap-2">
+          <button id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Tukar Tema" class="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center hover:scale-105 active:scale-95 transition">
+            <i id="theme-icon" class="fa-solid fa-moon text-base"></i>
           </button>
         </div>
       </div>
@@ -147,142 +163,281 @@
 
   <main id="app-container" class="flex-grow">
 
-    <!-- VIEW 1: HOME PAGE -->
-    <div id="home-view" class="space-y-16 pb-16">
+    <!-- ==========================================
+         TAB 1: HOME VIEW
+         ========================================== -->
+    <div id="tab-view-home" class="tab-view space-y-12 pb-14">
       
-      <!-- HERO SECTION -->
-      <section class="hero-gradient relative overflow-hidden pt-10 pb-16 md:py-20 border-b border-purple-100 dark:border-purple-950/40">
+      <!-- HERO BANNER -->
+      <section class="hero-gradient relative overflow-hidden pt-8 pb-12 md:py-16 border-b border-purple-100 dark:border-purple-950/40">
         <div class="absolute -top-12 -right-12 w-64 h-64 rounded-full bg-brand-pink/20 blur-3xl pointer-events-none"></div>
         <div class="absolute bottom-0 -left-12 w-72 h-72 rounded-full bg-brand-blue/20 blur-3xl pointer-events-none"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
-            <div class="lg:col-span-7 text-center lg:text-left space-y-5">
+            <div class="lg:col-span-7 text-center lg:text-left space-y-4">
               <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-100/90 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-xs font-bold uppercase tracking-wider">
-                <i class="fa-solid fa-sparkles text-amber-400"></i> Portal Game Interaktif Percuma
+                <i class="fa-solid fa-sparkles text-amber-400"></i> Portal Game Interaktif
               </div>
-              <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+              <h1 class="text-2xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
                 Semua Game Menarik, <br class="hidden sm:inline">
                 <span class="bg-gradient-to-r from-brand-pink via-brand-purple to-brand-blue bg-clip-text text-transparent">
                   Dalam Satu Tempat!
                 </span>
               </h1>
-              <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
-                Terokai pelbagai game percuma. Pilih game kegemaran anda dan terus bermain tanpa perlu daftar akaun atau muat turun apa-apa aplikasi.
+              <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed">
+                Pilih game kegemaran anda dan terus bermain secara percuma tanpa daftar akaun dari Tajwid Plus Empire.
               </p>
               
-              <!-- Hero Action Buttons -->
-              <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
-                <button onclick="navigateTo('all-games')" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-brand-pink via-brand-purple to-brand-blue text-white font-bold text-base shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:scale-[1.02] active:scale-[0.98] transition flex items-center justify-center gap-3">
-                  <i class="fa-solid fa-play"></i> Jom Main
+              <!-- Action Buttons -->
+              <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
+                <button onclick="switchAppTab('all-games')" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-gradient-to-r from-brand-pink via-brand-purple to-brand-blue text-white font-bold text-sm shadow-lg shadow-purple-500/30 hover:scale-105 active:scale-95 transition flex items-center justify-center gap-2.5">
+                  <i class="fa-solid fa-shapes"></i> Teroka Semua Game
                 </button>
-                <button onclick="triggerLuckyRandomGame()" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-purple-300 dark:border-purple-700 text-purple-700 dark:text-purple-300 font-bold text-base hover:bg-purple-50 dark:hover:bg-slate-800 transition flex items-center justify-center gap-2.5">
+                <button onclick="triggerLuckyRandomGame()" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-purple-300 dark:border-purple-700 text-purple-700 dark:text-purple-300 font-bold text-sm hover:bg-purple-50 dark:hover:bg-slate-800 transition flex items-center justify-center gap-2">
                   <i class="fa-solid fa-dice text-brand-pink"></i> Pilih Game Rawak
                 </button>
               </div>
-
-              <!-- Quick stats pills -->
-              <div class="pt-3 flex flex-wrap items-center justify-center lg:justify-start gap-5 text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
-                <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-amber-500"></i> Main Serta-merta</span>
-                <span class="flex items-center gap-2"><i class="fa-solid fa-check-double text-emerald-500"></i> 100% Percuma</span>
-                <span class="flex items-center gap-2"><i class="fa-solid fa-mobile-screen text-blue-500"></i> Mesra Telefon Pintar</span>
-              </div>
             </div>
 
-            <!-- Hero Graphic Showcase (Visual list of all 6 official games) -->
+            <!-- Hero Quick Showcase Box (Sorted chronologically: Prasekolah / Tahun 1 hingga 6 & Pengukuhan) -->
             <div class="lg:col-span-5 flex justify-center">
               <div class="relative w-full max-w-md">
-                <div class="absolute inset-0 bg-gradient-to-tr from-brand-pink via-brand-purple to-brand-blue rounded-3xl blur-2xl opacity-40"></div>
+                <div class="absolute inset-0 bg-gradient-to-tr from-brand-pink via-brand-purple to-brand-blue rounded-3xl blur-xl opacity-30"></div>
                 
-                <div class="relative bg-white/90 dark:bg-slate-900/90 border border-white/60 dark:border-slate-800 p-5 sm:p-6 rounded-3xl shadow-xl backdrop-blur-md space-y-3">
-                  <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
-                    <span class="font-bold flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+                <div class="relative bg-white/90 dark:bg-slate-900/90 border border-white/60 dark:border-slate-800 p-4 sm:p-5 rounded-3xl shadow-lg backdrop-blur-md space-y-2.5">
+                  <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                    <span class="font-bold text-xs sm:text-sm text-slate-700 dark:text-slate-200 flex items-center gap-2">
                       <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                      Game Tersedia
+                      Game Mengikut Tahun
                     </span>
-                    <span class="text-xs bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 font-bold px-2.5 py-1 rounded-full">
-                      6 Game Rasmi
-                    </span>
-                  </div>
-
-                  <!-- Quick showcase list -->
-                  <div onclick="openGameById('pengembaraan-bm-tahun-1')" class="group p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-purple-50 dark:hover:bg-purple-950/40 cursor-pointer border border-transparent hover:border-purple-200 dark:hover:border-purple-800 transition flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-400 to-orange-400 flex items-center justify-center text-white text-base shadow-sm">
-                      <i class="fa-solid fa-book-open"></i>
-                    </div>
-                    <div class="flex-grow min-w-0">
-                      <h4 class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-100 group-hover:text-brand-purple transition truncate">Bahasa Melayu Tahun 1</h4>
-                      <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Ejaan, Suku Kata & Kosa Kata</p>
-                    </div>
-                    <span class="w-7 h-7 rounded-full bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-300 flex items-center justify-center group-hover:scale-110 transition">
-                      <i class="fa-solid fa-play text-[10px] ml-0.5"></i>
+                    <span class="text-[11px] bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 font-bold px-2.5 py-0.5 rounded-full">
+                      20 Koleksi Rasmi
                     </span>
                   </div>
 
-                  <div onclick="openGameById('bahasa-melayu-tahun-2')" class="group p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-violet-50 dark:hover:bg-violet-950/40 cursor-pointer border border-transparent hover:border-violet-200 dark:hover:border-violet-800 transition flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-500 to-purple-600 flex items-center justify-center text-white text-base shadow-sm">
-                      <i class="fa-solid fa-graduation-cap"></i>
+                  <!-- Quick Clickable Game Items (1 hingga 20) -->
+                  <div class="space-y-2 max-h-[360px] overflow-y-auto pr-1">
+                    <div onclick="openGameById('matematik-5-7-tahun')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-sky-50 dark:hover:bg-sky-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-sky-500 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-calculator"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">1. Game Matematik 5-7 Tahun</p>
+                          <p class="text-[10px] text-slate-400">Prasekolah & Awal Persekolahan</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-sky-400 pr-1"></i>
                     </div>
-                    <div class="flex-grow min-w-0">
-                      <h4 class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-100 group-hover:text-purple-600 transition truncate">Bahasa Melayu Tahun 2</h4>
-                      <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Tatabahasa, Imbuhan & Pemahaman</p>
-                    </div>
-                    <span class="w-7 h-7 rounded-full bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-300 flex items-center justify-center group-hover:scale-110 transition">
-                      <i class="fa-solid fa-play text-[10px] ml-0.5"></i>
-                    </span>
-                  </div>
 
-                  <div onclick="openGameById('bahasa-melayu-tahun-3')" class="group p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 cursor-pointer border border-transparent hover:border-emerald-200 dark:hover:border-emerald-800 transition flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-400 to-teal-500 flex items-center justify-center text-white text-base shadow-sm">
-                      <i class="fa-solid fa-trophy"></i>
+                    <div onclick="openGameById('pengembaraan-bm-tahun-1')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-amber-50 dark:hover:bg-amber-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-amber-400 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-book-open"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">2. Bahasa Melayu Tahun 1</p>
+                          <p class="text-[10px] text-slate-400">Asas Ejaan & Kosa Kata</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-amber-400 pr-1"></i>
                     </div>
-                    <div class="flex-grow min-w-0">
-                      <h4 class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 transition truncate">Bahasa Melayu Tahun 3</h4>
-                      <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Tatabahasa, Kosa Kata & Penjodoh Bilangan</p>
-                    </div>
-                    <span class="w-7 h-7 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-300 flex items-center justify-center group-hover:scale-110 transition">
-                      <i class="fa-solid fa-play text-[10px] ml-0.5"></i>
-                    </span>
-                  </div>
 
-                  <div onclick="openGameById('nama-khas-nama-am')" class="group p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-pink-50 dark:hover:bg-pink-950/40 cursor-pointer border border-transparent hover:border-pink-200 dark:hover:border-pink-800 transition flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-400 to-pink-500 flex items-center justify-center text-white text-base shadow-sm">
-                      <i class="fa-solid fa-tags"></i>
+                    <div onclick="openGameById('english-year-1')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-rose-500 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-language"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">3. English Year 1 Adventure</p>
+                          <p class="text-[10px] text-slate-400">Phonics, Vocabulary & Grammar</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-rose-400 pr-1"></i>
                     </div>
-                    <div class="flex-grow min-w-0">
-                      <h4 class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-100 group-hover:text-pink-600 transition truncate">Kata Nama Khas & Am</h4>
-                      <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Latihan Pengukuhan Tatabahasa</p>
-                    </div>
-                    <span class="w-7 h-7 rounded-full bg-pink-100 dark:bg-pink-900/50 text-pink-600 dark:text-pink-300 flex items-center justify-center group-hover:scale-110 transition">
-                      <i class="fa-solid fa-play text-[10px] ml-0.5"></i>
-                    </span>
-                  </div>
 
-                  <div onclick="openGameById('konsonan-dan-vokal')" class="group p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-teal-50 dark:hover:bg-teal-950/40 cursor-pointer border border-transparent hover:border-teal-200 dark:hover:border-teal-800 transition flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-400 to-emerald-500 flex items-center justify-center text-white text-base shadow-sm">
-                      <i class="fa-solid fa-font"></i>
+                    <div onclick="openGameById('matematik-tahun-1')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-cyan-50 dark:hover:bg-cyan-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-cyan-500 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-cubes"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">4. Matematik Tahun 1</p>
+                          <p class="text-[10px] text-slate-400">Nombor, Tambah Tolak & Asas</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-cyan-400 pr-1"></i>
                     </div>
-                    <div class="flex-grow min-w-0">
-                      <h4 class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-100 group-hover:text-teal-600 transition truncate">Konsonan & Vokal</h4>
-                      <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Misi Mengecam Huruf</p>
-                    </div>
-                    <span class="w-7 h-7 rounded-full bg-teal-100 dark:bg-teal-900/50 text-teal-600 dark:text-teal-300 flex items-center justify-center group-hover:scale-110 transition">
-                      <i class="fa-solid fa-play text-[10px] ml-0.5"></i>
-                    </span>
-                  </div>
 
-                  <div onclick="openGameById('matematik-5-7-tahun')" class="group p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-amber-50 dark:hover:bg-amber-950/40 cursor-pointer border border-transparent hover:border-amber-200 dark:hover:border-amber-800 transition flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-400 to-indigo-500 flex items-center justify-center text-white text-base shadow-sm">
-                      <i class="fa-solid fa-calculator"></i>
+                    <div onclick="openGameById('bahasa-melayu-tahun-2')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-violet-50 dark:hover:bg-violet-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-violet-500 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-graduation-cap"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">5. Bahasa Melayu Tahun 2</p>
+                          <p class="text-[10px] text-slate-400">Tatabahasa & Imbuhan</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-violet-400 pr-1"></i>
                     </div>
-                    <div class="flex-grow min-w-0">
-                      <h4 class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 transition truncate">Game Matematik 5-7 Tahun</h4>
-                      <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Asas Kiraan, Nombor & Operasi Mudah</p>
+
+                    <div onclick="openGameById('english-year-2')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-orange-50 dark:hover:bg-orange-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-orange-500 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-comments"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">6. English Year 2 Adventure</p>
+                          <p class="text-[10px] text-slate-400">Sentences, Words & Fun Quizzes</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-orange-400 pr-1"></i>
                     </div>
-                    <span class="w-7 h-7 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 flex items-center justify-center group-hover:scale-110 transition">
-                      <i class="fa-solid fa-play text-[10px] ml-0.5"></i>
-                    </span>
+
+                    <div onclick="openGameById('matematik-tahun-2')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-blue-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-blue-500 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-calculator"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">7. Matematik Tahun 2</p>
+                          <p class="text-[10px] text-slate-400">Nombor 1000, Wang, Masa & Bentuk</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-blue-400 pr-1"></i>
+                    </div>
+
+                    <div onclick="openGameById('bahasa-melayu-tahun-3')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-trophy"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">8. Bahasa Melayu Tahun 3</p>
+                          <p class="text-[10px] text-slate-400">Penjodoh Bilangan & Binaan Ayat</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-emerald-400 pr-1"></i>
+                    </div>
+
+                    <div onclick="openGameById('english-year-3')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-500 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-book-bookmark"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">9. English Year 3 Adventure</p>
+                          <p class="text-[10px] text-slate-400">Vocabulary, Comprehension & Grammar</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-indigo-400 pr-1"></i>
+                    </div>
+
+                    <div onclick="openGameById('matematik-tahun-3')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-teal-50 dark:hover:bg-teal-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-teal-500 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-shapes"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">10. Matematik Tahun 3</p>
+                          <p class="text-[10px] text-slate-400">Darab Bahagi, Pecahan & Wang</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-teal-400 pr-1"></i>
+                    </div>
+
+                    <div onclick="openGameById('bahasa-melayu-tahun-4')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-blue-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-blue-500 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-medal"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">11. Bahasa Melayu Tahun 4</p>
+                          <p class="text-[10px] text-slate-400">Peribahasa & Tatabahasa Lanjutan</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-blue-400 pr-1"></i>
+                    </div>
+
+                    <div onclick="openGameById('matematik-tahun-4')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-cyan-50 dark:hover:bg-cyan-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-cyan-600 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-compass-drafting"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">12. Matematik Tahun 4</p>
+                          <p class="text-[10px] text-slate-400">Nombor 100,000, Pecahan & Sudut</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-cyan-400 pr-1"></i>
+                    </div>
+
+                    <div onclick="openGameById('bahasa-melayu-tahun-5')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-award"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">13. Bahasa Melayu Tahun 5</p>
+                          <p class="text-[10px] text-slate-400">Pengayaan Bahasa & Pemahaman</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-indigo-400 pr-1"></i>
+                    </div>
+
+                    <div onclick="openGameById('matematik-tahun-5')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-purple-50 dark:hover:bg-purple-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-square-root-variable"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">14. Matematik Tahun 5</p>
+                          <p class="text-[10px] text-slate-400">Nombor Juta, Peratus, Jisim & Ruang</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-purple-400 pr-1"></i>
+                    </div>
+
+                    <div onclick="openGameById('bahasa-melayu-tahun-6')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-rose-500 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-crown"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">15. Bahasa Melayu Tahun 6</p>
+                          <p class="text-[10px] text-slate-400">Tatabahasa Aras Tinggi & Kosa Kata</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-rose-400 pr-1"></i>
+                    </div>
+
+                    <div onclick="openGameById('matematik-tahun-6')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-amber-50 dark:hover:bg-amber-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-chart-pie"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">16. Matematik Tahun 6</p>
+                          <p class="text-[10px] text-slate-400">Kebolehjadian, Nisbah & Kewangan</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-amber-400 pr-1"></i>
+                    </div>
+
+                    <div onclick="openGameById('nama-khas-nama-am')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-pink-50 dark:hover:bg-pink-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-pink-500 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-tags"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">17. Kata Nama Khas & Am</p>
+                          <p class="text-[10px] text-slate-400">Pengukuhan Tatabahasa</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-pink-400 pr-1"></i>
+                    </div>
+
+                    <div onclick="openGameById('konsonan-dan-vokal')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-teal-50 dark:hover:bg-teal-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-teal-500 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-font"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">18. Huruf Konsonan & Vokal</p>
+                          <p class="text-[10px] text-slate-400">Pengenalan & Pengukuhan Asas</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-teal-400 pr-1"></i>
+                    </div>
+
+                    <div onclick="openGameById('teka-silang-kata-kanak-kanak')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-puzzle-piece"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">19. Teka Silang Kata Kanak-Kanak</p>
+                          <p class="text-[10px] text-slate-400">Uji Minda & Kosa Kata</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-emerald-400 pr-1"></i>
+                    </div>
+
+                    <div onclick="openGameById('teka-silang-kata-cabaran-minda')" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-fuchsia-50 dark:hover:bg-fuchsia-950/40 cursor-pointer transition flex items-center justify-between">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-8 rounded-lg bg-fuchsia-600 text-white flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-brain"></i></span>
+                        <div class="truncate">
+                          <p class="text-xs font-bold truncate text-slate-800 dark:text-slate-100">20. Silang Kata Cabaran Minda</p>
+                          <p class="text-[10px] text-slate-400">Uji Minda Kritis & Pintar</p>
+                        </div>
+                      </div>
+                      <i class="fa-solid fa-chevron-right text-xs text-fuchsia-400 pr-1"></i>
+                    </div>
                   </div>
 
                 </div>
@@ -293,314 +448,526 @@
         </div>
       </section>
 
-      <!-- SECTION: GAME PILIHAN -->
-      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
-          <div>
-            <div class="flex items-center gap-2 text-brand-purple font-bold text-xs uppercase tracking-wider mb-1">
-              <i class="fa-solid fa-star text-amber-400"></i> Paling Disyorkan
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">Game Pilihan Pengunjung</h2>
-          </div>
-          <button onclick="navigateTo('all-games')" class="text-sm font-bold text-brand-purple hover:text-brand-deepPurple dark:text-purple-400 flex items-center gap-1.5 transition">
-            Lihat semua <i class="fa-solid fa-arrow-right text-xs"></i>
-          </button>
-        </div>
-        <div id="featured-games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Injected via JavaScript -->
-        </div>
-      </section>
-
       <!-- SECTION: SAYA BERTUAH! (RANDOM GAME GENERATOR) -->
       <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="rounded-3xl p-7 sm:p-10 relative overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-900 text-white shadow-xl">
-          <div class="absolute -right-8 -bottom-8 opacity-10 text-white text-9xl pointer-events-none">
-            <i class="fa-solid fa-dice-d20"></i>
-          </div>
-          <div class="relative z-10 max-w-2xl mx-auto text-center space-y-4">
-            <span class="inline-block px-3.5 py-1 rounded-full bg-white/20 text-white text-xs font-bold tracking-widest uppercase">
-              Rasa Bosan?
-            </span>
-            <h2 class="text-2xl sm:text-3xl font-black">Tak Tahu Nak Main Game Apa?</h2>
-            <p class="text-purple-200 text-xs sm:text-sm">
-              Biarkan sistem memilihkan game untuk anda secara rawak. Tekan butang di bawah dan mula bermain!
-            </p>
-            <div class="pt-2">
-              <button onclick="triggerLuckyRandomGame()" class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black text-base sm:text-lg shadow-lg shadow-orange-500/30 hover:scale-105 active:scale-95 transition inline-flex items-center gap-3">
-                <i class="fa-solid fa-wand-magic-sparkles text-xl"></i> SAYA BERTUAH!
-              </button>
-            </div>
-            <div id="random-game-result" class="hidden mt-6 p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-left sm:flex items-center gap-4 transition-all">
-              <!-- Injected dynamically -->
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SECTION: GAME BAHARU DITAMBAH -->
-      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between mb-8">
-          <div>
-            <div class="flex items-center gap-2 text-brand-pink font-bold text-xs uppercase tracking-wider mb-1">
-              <i class="fa-solid fa-sparkles text-pink-500"></i> Koleksi Aktif
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">Koleksi Game Terkini</h2>
-          </div>
-        </div>
-        <div id="new-games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Injected via JavaScript -->
-        </div>
-      </section>
-
-      <!-- SECTION: KATEGORI GAME -->
-      <section id="categories-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
-        <div class="text-center max-w-2xl mx-auto mb-8 space-y-2">
-          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">Kategori Game</h2>
-          <p class="text-slate-500 dark:text-slate-400 text-sm">Pilih kategori untuk melihat permainan yang tersedia.</p>
-        </div>
-        <div id="categories-chips-container" class="flex flex-wrap items-center justify-center gap-3">
-          <!-- Category buttons generated via JavaScript -->
-        </div>
-      </section>
-
-      <!-- SECTION: SEMUA GAME DENGAN SEARCH & FILTER -->
-      <section id="all-games" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
-        <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-6">
-          
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-100 dark:border-slate-800">
-            <div>
-              <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">Katalog Penuh Game</h2>
-              <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-1">Cari dan tapis koleksi permainan kami.</p>
-            </div>
-            <div class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">
-              Menunjukkan <span id="game-count-display" class="text-brand-purple font-bold">0</span> game
-            </div>
-          </div>
-
-          <!-- Search & Filter Controls -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-            <!-- Keyword search -->
-            <div class="relative">
-              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
-              <input type="text" id="filter-search-input" oninput="applyFilters()" placeholder="Cari nama atau penerangan..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-purple text-sm">
-            </div>
-
-            <!-- Category filter -->
-            <div>
-              <select id="filter-category-select" onchange="applyFilters()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-purple text-sm cursor-pointer">
-                <option value="ALL">Semua Kategori</option>
-              </select>
-            </div>
-
-            <!-- Sort By -->
-            <div>
-              <select id="filter-sort-select" onchange="applyFilters()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-purple text-sm cursor-pointer">
-                <option value="az">Abjad (A - Z)</option>
-                <option value="za">Abjad (Z - A)</option>
-                <option value="newest">Terkini Ditambah</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Active Games Grid -->
-          <div id="all-games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-2 min-h-[220px]">
-            <!-- Injected via JavaScript -->
-          </div>
-
-          <!-- Empty state placeholder -->
-          <div id="no-games-found" class="hidden text-center py-12 space-y-3">
-            <div class="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300 flex items-center justify-center mx-auto text-xl">
-              <i class="fa-solid fa-gamepad"></i>
-            </div>
-            <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">Tiada game dijumpai</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">Cuba masukkan kata kunci lain atau tetapkan semula carian anda.</p>
-            <button onclick="resetFilters()" class="px-4 py-2 rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 font-semibold text-xs hover:bg-purple-200 transition">
-              Tetapkan Semula Carian
+        <div class="rounded-3xl p-6 sm:p-8 relative overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-900 text-white shadow-lg text-center space-y-3">
+          <span class="inline-block px-3 py-1 rounded-full bg-white/20 text-white text-[10px] font-bold tracking-widest uppercase">
+            Rasa Bosan?
+          </span>
+          <h2 class="text-xl sm:text-2xl font-black">Tak Tahu Nak Main Game Apa?</h2>
+          <p class="text-purple-200 text-xs sm:text-sm max-w-md mx-auto">
+            Tekan butang di bawah untuk menjana satu game secara rawak daripada 20 koleksi aktif!
+          </p>
+          <div class="pt-2">
+            <button onclick="triggerLuckyRandomGame()" class="px-7 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black text-sm shadow-lg shadow-orange-500/25 active:scale-95 transition inline-flex items-center gap-2">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> SAYA BERTUAH!
             </button>
           </div>
+          <div id="random-game-result" class="hidden mt-4 p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-left sm:flex items-center gap-4 transition-all">
+            <!-- Dynamic Result Injected -->
+          </div>
+        </div>
+      </section>
 
+      <!-- SECTION: GAME PILIHAN -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <div class="text-brand-purple font-bold text-xs uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-star text-amber-400"></i> Disyorkan
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">Game Pilihan Ramai</h2>
+          </div>
+          <button onclick="switchAppTab('all-games')" class="text-xs font-bold text-brand-purple flex items-center gap-1 hover:underline">
+            Semua <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+        <div id="home-featured-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Injected via JavaScript -->
         </div>
       </section>
 
     </div>
 
-    <!-- VIEW 2: HALAMAN PERMAINAN (GAME PLAY PAGE) -->
-    <div id="gameplay-view" class="hidden max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+    <!-- ==========================================
+         TAB 2: SEMUA GAME (KATALOG PENUH IKUT TAHUN)
+         ========================================== -->
+    <div id="tab-view-all-games" class="tab-view hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       
-      <!-- Top Action Bar -->
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <button onclick="closeGameplayView()" class="px-4 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-sm transition flex items-center gap-2">
-          <i class="fa-solid fa-arrow-left"></i> Kembali ke Senarai Game
-        </button>
-
-        <div class="flex items-center gap-2">
-          <button onclick="toggleTheaterMode()" class="px-4 py-2.5 rounded-xl bg-brand-purple hover:bg-brand-deepPurple text-white font-bold text-sm transition flex items-center gap-2 shadow-md" title="Besarkan Skrin">
-            <i class="fa-solid fa-expand"></i> <span id="theater-btn-text">Skrin Penuh (Teater)</span>
-          </button>
+      <!-- Screen Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <div class="text-xs font-bold text-brand-purple uppercase tracking-wider">Koleksi Lengkap</div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">Katalog Semua Game</h2>
+        </div>
+        <div class="text-xs font-semibold px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 w-fit">
+          <span id="all-game-counter" class="font-bold">20</span> game tersedia
         </div>
       </div>
 
-      <!-- Game Title & Meta Header -->
-      <div class="space-y-2">
-        <div class="flex flex-wrap items-center gap-2">
-          <span id="gp-badge-category" class="px-3 py-1 rounded-full text-xs font-bold uppercase bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300">Bahasa Melayu</span>
-          <span id="gp-badge-type" class="px-3 py-1 rounded-full text-xs font-bold uppercase bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300">Web Interaktif</span>
-          <span id="gp-badge-diff" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300">Mudah</span>
+      <!-- Search & Filters Toolbar -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <!-- Search bar -->
+        <div class="relative sm:col-span-2">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+          <input 
+            type="text" 
+            id="tab-search-input" 
+            oninput="applyAllGamesFilter()" 
+            placeholder="Cari nama game..." 
+            class="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple"
+          >
         </div>
-        <h1 id="gp-title" class="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white">Nama Permainan</h1>
-        <p id="gp-description" class="text-slate-600 dark:text-slate-300 text-sm sm:text-base max-w-3xl">Penerangan permainan interaktif.</p>
+
+        <!-- Sort Select with Year 1-6 Option -->
+        <div>
+          <select 
+            id="tab-sort-select" 
+            onchange="applyAllGamesFilter()" 
+            class="w-full px-3.5 py-2.5 rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple cursor-pointer"
+          >
+            <option value="year">Susun: Ikut Tahun (Tahun 1 - 6)</option>
+            <option value="az">Susun: Abjad (A - Z)</option>
+            <option value="za">Susun: Abjad (Z - A)</option>
+          </select>
+        </div>
       </div>
 
-      <!-- PLAYGROUND CONTAINER / GAME SCREEN -->
-      <div id="game-canvas-wrapper" class="relative w-full rounded-3xl overflow-hidden bg-slate-950 border-4 border-purple-300/80 dark:border-purple-800/80 shadow-2xl flex flex-col h-[75vh] min-h-[580px] max-h-[850px] transition-all">
-        
-        <!-- Floating Theater Mode Exit Button (Only visible in theater mode) -->
-        <button id="theater-exit-btn" onclick="toggleTheaterMode()" class="hidden absolute top-4 right-4 z-50 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-2xl flex items-center gap-2">
-          <i class="fa-solid fa-compress"></i> Tutup Mod Teater
-        </button>
+      <!-- Games Grid -->
+      <div id="catalog-games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-1">
+        <!-- Injected via JavaScript -->
+      </div>
 
-        <!-- Dynamic Embed Injected Here -->
-        <div id="game-active-element" class="relative w-full flex-grow bg-slate-900 overflow-hidden">
-          <!-- Safe iFrame loaded here -->
+      <!-- Empty State -->
+      <div id="catalog-empty-state" class="hidden text-center py-12 space-y-3">
+        <div class="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-300 flex items-center justify-center mx-auto text-xl">
+          <i class="fa-solid fa-gamepad"></i>
         </div>
+        <h4 class="font-bold text-slate-700 dark:text-slate-200 text-base">Tiada Game Dijumpai</h4>
+        <p class="text-xs text-slate-400">Sila cuba kata kunci carian yang lain.</p>
+      </div>
 
-        <!-- Controls Toolbar bottom of screen -->
-        <div id="gp-controls-bar" class="w-full bg-slate-950 border-t border-slate-800 px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-300">
-          <div class="flex items-center gap-3">
-            <span id="gp-status-indicator" class="flex items-center gap-2 font-medium">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span> Game Sedia Dimainkan
-            </span>
+    </div>
+
+    <!-- ==========================================
+         TAB 3: KATEGORI GAME
+         ========================================== -->
+    <div id="tab-view-categories" class="tab-view hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      
+      <!-- Category Screen Header -->
+      <div class="space-y-1">
+        <div class="text-xs font-bold text-brand-purple uppercase tracking-wider">Pilih Kategori</div>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">Kategori Permainan</h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Pilih subjek atau kategori untuk melihat permainan berkaitan.</p>
+      </div>
+
+      <!-- Category Filter Tabs / Cards (Semua, BM, BI, Matematik) -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <button onclick="selectCategoryFilter('ALL')" id="cat-card-all" class="p-4 rounded-2xl border-2 border-brand-purple bg-purple-50 dark:bg-purple-950/40 text-left transition active:scale-95">
+          <div class="w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center text-sm mb-2 shadow-sm">
+            <i class="fa-solid fa-border-all"></i>
           </div>
-          <div class="flex items-center gap-2">
-            <button id="gp-restart-btn" onclick="restartCurrentGame()" class="px-3.5 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-semibold flex items-center gap-1.5 transition">
-              <i class="fa-solid fa-rotate-right"></i> Muat Semula Game
-            </button>
-            <a id="gp-direct-link" href="#" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold flex items-center gap-1.5 transition">
-              <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Tab Penuh
+          <h4 class="font-bold text-sm text-slate-900 dark:text-white">Semua</h4>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">20 Game</p>
+        </button>
+
+        <button onclick="selectCategoryFilter('Bahasa Melayu')" id="cat-card-bm" class="p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-purple text-left transition active:scale-95">
+          <div class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center text-sm mb-2 shadow-sm">
+            <i class="fa-solid fa-book"></i>
+          </div>
+          <h4 class="font-bold text-sm text-slate-900 dark:text-white">Bahasa Melayu</h4>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">10 Game</p>
+        </button>
+
+        <button onclick="selectCategoryFilter('Bahasa Inggeris')" id="cat-card-bi" class="p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-purple text-left transition active:scale-95">
+          <div class="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center text-sm mb-2 shadow-sm">
+            <i class="fa-solid fa-language"></i>
+          </div>
+          <h4 class="font-bold text-sm text-slate-900 dark:text-white">Bahasa Inggeris</h4>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">3 Game</p>
+        </button>
+
+        <button onclick="selectCategoryFilter('Matematik')" id="cat-card-math" class="p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-purple text-left transition active:scale-95">
+          <div class="w-9 h-9 rounded-xl bg-sky-500 text-white flex items-center justify-center text-sm mb-2 shadow-sm">
+            <i class="fa-solid fa-calculator"></i>
+          </div>
+          <h4 class="font-bold text-sm text-slate-900 dark:text-white">Matematik</h4>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">7 Game</p>
+        </button>
+      </div>
+
+      <!-- Display games for active category -->
+      <div class="pt-2">
+        <h3 id="cat-active-label" class="text-base font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-layer-group text-brand-purple"></i> Senarai Game: <span class="text-brand-purple">Semua Kategori</span>
+        </h3>
+        <div id="category-games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==========================================
+         TAB 4: BAHAN LAIN (PRODUK & UPSELL)
+         ========================================== -->
+    <div id="tab-view-other-products" class="tab-view hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      
+      <!-- Section Header -->
+      <div class="bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl p-6 sm:p-8 border border-amber-200/50 dark:border-amber-900/40 relative overflow-hidden">
+        <div class="relative z-10 space-y-2">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-black uppercase tracking-wider">
+            <i class="fa-solid fa-crown text-amber-500"></i> Koleksi Premium & Peluang
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white">
+            Bahan & Produk Tajwid Plus Empire
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl">
+            Tingkatkan kemahiran, miliki bahan pendidikan interaktif, dan terokai peluang menjana pendapatan bersama produk rasmi Tajwid Plus Empire.
+          </p>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Product 1: Game Tajwid -->
+        <div class="card-hover bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm flex flex-col justify-between p-6">
+          <div class="space-y-4">
+            <div class="flex items-start justify-between gap-3">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center text-2xl shadow-md flex-shrink-0">
+                <i class="fa-solid fa-quran"></i>
+              </div>
+              <span class="px-3.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-black text-base">
+                RM30
+              </span>
+            </div>
+            <div>
+              <h3 class="text-xl font-black text-slate-900 dark:text-white">Game Tajwid</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                Permainan interaktif pembelajaran ilmu tajwid lengkap. Membantu anak-anak dan murid menguasai hukum tajwid, makhraj huruf, dan cara bacaan dengan cara mudah dan menyeronokkan.
+              </p>
+            </div>
+            <ul class="text-xs text-slate-600 dark:text-slate-300 space-y-1.5 pt-1">
+              <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-500 text-[11px]"></i> Modul kuiz & cabaran hukum tajwid lengkap</li>
+              <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-500 text-[11px]"></i> Visual interaktif menarik untuk murid</li>
+              <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-500 text-[11px]"></i> Akses terus tanpa pemasangan rumit</li>
+            </ul>
+          </div>
+          <div class="pt-5 border-t border-slate-100 dark:border-slate-800 mt-4">
+            <a href="https://wa.me/601158607882?text=Hai%20Tajwid%20Plus%20Empire,%20saya%20berminat%20untuk%20dapatkan%20Game%20Tajwid%20(RM30)." target="_blank" rel="noopener noreferrer" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-95 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2 transition active:scale-95">
+              <i class="fa-brands fa-whatsapp text-sm"></i> Dapatkan Sekarang (RM30)
             </a>
           </div>
         </div>
+
+        <!-- Product 2: Game Tajwid Affiliate -->
+        <div class="card-hover bg-white dark:bg-slate-900 rounded-3xl border border-purple-200 dark:border-purple-900/60 overflow-hidden shadow-sm flex flex-col justify-between p-6">
+          <div class="space-y-4">
+            <div class="flex items-start justify-between gap-3">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-500 text-white flex items-center justify-center text-2xl shadow-md flex-shrink-0">
+                <i class="fa-solid fa-handshake"></i>
+              </div>
+              <span class="px-3.5 py-1 rounded-full bg-purple-100 dark:bg-purple-950 text-brand-purple dark:text-purple-300 font-black text-base">
+                RM40
+              </span>
+            </div>
+            <div>
+              <div class="inline-block px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-[10px] font-bold uppercase mb-1">
+                Peluang Menjana Pendapatan
+              </div>
+              <h3 class="text-xl font-black text-slate-900 dark:text-white">Game Tajwid Affiliate</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                Daftar sebagai affiliate sah Game Tajwid. Raih komisen lumayan dengan berkongsi dan mempromosikan permainan pendidikan yang bermanfaat kepada ibu bapa dan guru.
+              </p>
+            </div>
+            <ul class="text-xs text-slate-600 dark:text-slate-300 space-y-1.5 pt-1">
+              <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-purple-500 text-[11px]"></i> Lesen sah sebagai affiliate Tajwid Plus Empire</li>
+              <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-purple-500 text-[11px]"></i> Bahan pemasaran, gambar & copywriting disediakan</li>
+              <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-purple-500 text-[11px]"></i> Sistem bayaran komisen yang telus</li>
+            </ul>
+          </div>
+          <div class="pt-5 border-t border-slate-100 dark:border-slate-800 mt-4">
+            <a href="https://wa.me/601158607882?text=Hai%20Tajwid%20Plus%20Empire,%20saya%20berminat%20untuk%20mendaftar%20sebagai%20Affiliate%20Game%20Tajwid%20(RM40)." target="_blank" rel="noopener noreferrer" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-purple-500/20 flex items-center justify-center gap-2 transition active:scale-95">
+              <i class="fa-brands fa-whatsapp text-sm"></i> Sertai Affiliate (RM40)
+            </a>
+          </div>
+        </div>
+
+        <!-- Product 3: Sales Page Custom RM50 -->
+        <div class="card-hover bg-white dark:bg-slate-900 rounded-3xl border border-rose-200 dark:border-rose-900/60 overflow-hidden shadow-sm flex flex-col justify-between p-6">
+          <div class="space-y-4">
+            <div class="flex items-start justify-between gap-3">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-rose-500 to-pink-500 text-white flex items-center justify-center text-2xl shadow-md flex-shrink-0">
+                <i class="fa-solid fa-palette"></i>
+              </div>
+              <div class="text-right">
+                <span class="px-3.5 py-1 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 font-black text-base">
+                  RM50
+                </span>
+                <span class="block text-[10px] font-bold text-brand-purple dark:text-purple-300 mt-0.5">
+                  ✨ Custom Eksklusif
+                </span>
+              </div>
+            </div>
+            <div>
+              <div class="inline-block px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300 text-[10px] font-bold uppercase mb-1">
+                Servis Binaan Jualan
+              </div>
+              <h3 class="text-xl font-black text-slate-900 dark:text-white">Sales Page Custom</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                Khidmat binaan Sales Page khusus dan kustom untuk produk atau perniagaan anda. Reka bentuk profesional, mesra pelawat telefon pintar dan direka khas untuk meningkatkan kadar konversi jualan.
+              </p>
+            </div>
+            <ul class="text-xs text-slate-600 dark:text-slate-300 space-y-1.5 pt-1">
+              <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-rose-500 text-[11px]"></i> Reka bentuk kustom mengikut jenama & produk anda</li>
+              <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-rose-500 text-[11px]"></i> Susun atur mesra pengguna mobile & pantas dimuat</li>
+              <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-rose-500 text-[11px]"></i> Integrasi butang WhatsApp jualan & borang tempahan</li>
+            </ul>
+          </div>
+          <div class="pt-5 border-t border-slate-100 dark:border-slate-800 mt-4">
+            <a href="https://wa.me/601158607882?text=Hai%20Tajwid%20Plus%20Empire,%20saya%20ingin%20beli%20Sales%20Page%20Custom%20(RM50)." target="_blank" rel="noopener noreferrer" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-600 hover:opacity-95 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-rose-500/20 flex items-center justify-center gap-2 transition active:scale-95">
+              <i class="fa-brands fa-whatsapp text-sm"></i> Beli Sales Page Custom (RM50)
+            </a>
+          </div>
+        </div>
+
+        <!-- Product 4: Kelas Game & Website -->
+        <div class="card-hover bg-white dark:bg-slate-900 rounded-3xl border border-blue-200 dark:border-blue-900/60 overflow-hidden shadow-sm flex flex-col justify-between p-6">
+          <div class="space-y-4">
+            <div class="flex items-start justify-between gap-3">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-500 text-white flex items-center justify-center text-2xl shadow-md flex-shrink-0">
+                <i class="fa-solid fa-laptop-code"></i>
+              </div>
+              <span class="px-3.5 py-1 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-black text-base">
+                RM69
+              </span>
+            </div>
+            <div>
+              <div class="inline-block px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 text-[10px] font-bold uppercase mb-1">
+                Bimbingan Lengkap
+              </div>
+              <h3 class="text-xl font-black text-slate-900 dark:text-white">Kelas Game & Website</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                Belajar langkah demi langkah cara membina website dan permainan interaktif anda sendiri dari asas walaupun tanpa latar belakang pengaturcaraan yang mendalam.
+              </p>
+            </div>
+            <ul class="text-xs text-slate-600 dark:text-slate-300 space-y-1.5 pt-1">
+              <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-blue-500 text-[11px]"></i> Modul praktikal bina website & portal game</li>
+              <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-blue-500 text-[11px]"></i> Panduan hosting percuma & integrasi domain</li>
+              <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-blue-500 text-[11px]"></i> Sokongan bimbingan & sesi soal jawab</li>
+            </ul>
+          </div>
+          <div class="pt-5 border-t border-slate-100 dark:border-slate-800 mt-4">
+            <a href="https://wa.me/601158607882?text=Hai%20Tajwid%20Plus%20Empire,%20saya%20ingin%20mendaftar%20untuk%20Kelas%20Game%20%26%20Website%20(RM69)." target="_blank" rel="noopener noreferrer" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:opacity-95 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 transition active:scale-95">
+              <i class="fa-brands fa-whatsapp text-sm"></i> Daftar Kelas (RM69)
+            </a>
+          </div>
+        </div>
+
+        <!-- Product 5 / Khidmat Masyarakat: Saluran Aduan Kes Ahlong -->
+        <div class="md:col-span-2 card-hover bg-gradient-to-br from-red-950/40 via-slate-900 to-slate-950 rounded-3xl border-2 border-red-500/50 dark:border-red-600/60 overflow-hidden shadow-lg p-6 sm:p-7 relative">
+          <div class="flex flex-col sm:flex-row items-start justify-between gap-4">
+            <div class="flex items-start gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-red-600 to-rose-700 text-white flex items-center justify-center text-2xl shadow-lg shadow-red-500/30 flex-shrink-0">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <div class="space-y-1">
+                <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-red-500/20 text-red-400 text-[11px] font-black uppercase tracking-wider border border-red-500/30">
+                  <i class="fa-solid fa-triangle-exclamation animate-pulse"></i> Bantuan & Saluran Aduan
+                </div>
+                <h3 class="text-xl sm:text-2xl font-black text-white">Saluran Aduan Kes Ahlong</h3>
+                <p class="text-xs sm:text-sm font-semibold text-rose-300">
+                  Wakil Team Email Rakyat • Membantu Mangsa Jerat Pinjaman Tidak Sah
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="my-4 p-4 rounded-2xl bg-red-950/50 border border-red-800/60 space-y-2">
+            <p class="text-xs sm:text-sm text-red-100 leading-relaxed font-medium">
+              Khusus bagi menyelesaikan: <strong class="text-white">Kes Ahlong App / Website / WhatsApp / Face to Face</strong>.
+            </p>
+            <div class="flex items-center gap-2 text-xs sm:text-sm font-black text-amber-300 bg-black/40 px-3 py-2 rounded-xl border border-amber-400/30">
+              <i class="fa-solid fa-hand text-base text-red-500"></i>
+              <span>AMARAN PENTING: JANGAN BAYAR AHLONG LANGSUNG!</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Dapatkan bantuan khidmat nasihat dan tindakan rasmi. Jangan biarkan diri anda atau keluarga diugut. Sila isi borang aduan di bawah dengan segera.
+            </p>
+          </div>
+
+          <div class="pt-2 flex flex-col sm:flex-row items-center gap-3">
+            <a href="https://borangaduanahlong.netlify.app/" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-500 hover:to-rose-600 text-white font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-red-600/30 flex items-center justify-center gap-2.5 transition active:scale-95">
+              <i class="fa-solid fa-file-pen"></i> Sila Isi Borang Aduan
+            </a>
+            <span class="text-[11px] text-slate-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-lock text-emerald-400"></i> Maklumat aduan anda dilindungi dan dirahsiakan.
+            </span>
+          </div>
+        </div>
+
       </div>
 
-      <!-- Creator Credits and Source Information -->
-      <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs sm:text-sm">
-        <div class="space-y-1">
-          <p class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-            <i class="fa-solid fa-circle-info text-brand-purple"></i> Maklumat Pengehosan & Sumber
-          </p>
-          <p id="gp-credits" class="text-slate-500 dark:text-slate-400">Pautan rasmi permainan interaktif.</p>
+    </div>
+
+    <!-- ==========================================
+         VIEW KHUSUS: HALAMAN MAIN GAME (DEDICATED)
+         ========================================== -->
+    <div id="dedicated-gameplay-view" class="hidden min-h-screen bg-slate-950 text-white flex flex-col">
+      
+      <!-- STICKY TOP APP BAR KHUSUS GAMEPLAY -->
+      <div class="sticky top-0 z-50 bg-slate-900/95 border-b border-slate-800 px-3 sm:px-6 py-3 backdrop-blur-md flex items-center justify-between gap-2 shadow-lg">
+        
+        <!-- BUTTON HALAMAN KEMBALI (Sangat Jelas & Menonjol) -->
+        <button 
+          onclick="closeDedicatedGameplayView()" 
+          class="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-pink via-brand-purple to-brand-blue hover:opacity-90 active:scale-95 text-white font-black text-xs sm:text-sm shadow-md flex items-center gap-2 transition"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Halaman Kembali</span>
+        </button>
+
+        <!-- Current Game Title Badge -->
+        <div class="flex items-center gap-2 truncate max-w-[50%] sm:max-w-md">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping flex-shrink-0"></span>
+          <span id="gp-top-title" class="text-xs sm:text-sm font-bold truncate text-slate-200">Nama Game</span>
         </div>
-        <div id="gp-external-container">
-          <a id="gp-external-btn" href="#" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs inline-flex items-center gap-2 shadow-md">
-            <span>Main di Laman Asal</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
-          </a>
+
+        <!-- Quick actions -->
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <button onclick="restartActiveGame()" class="p-2 sm:px-3 sm:py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition" title="Muat Semula">
+            <i class="fa-solid fa-rotate-right"></i> <span class="hidden sm:inline">Muat Semula</span>
+          </button>
+          <button onclick="toggleTheaterMode()" class="p-2 sm:px-3 sm:py-1.5 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-semibold flex items-center gap-1.5 transition" title="Skrin Penuh">
+            <i class="fa-solid fa-expand"></i> <span class="hidden sm:inline" id="theater-btn-text">Skrin Penuh</span>
+          </button>
         </div>
+
       </div>
 
-      <!-- CADANGAN GAME LAIN -->
-      <div class="space-y-4 pt-4">
-        <h3 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-          <i class="fa-solid fa-thumbs-up text-brand-pink"></i> Permainan Interaktif Lain
-        </h3>
-        <div id="recommended-games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Injected via JavaScript -->
+      <!-- GAME ARENA CONTAINER -->
+      <div class="flex-grow max-w-6xl w-full mx-auto px-2 sm:px-6 py-3 sm:py-6 flex flex-col space-y-4">
+        
+        <!-- Iframe Canvas Wrapper -->
+        <div id="game-canvas-wrapper" class="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 border border-slate-800 shadow-2xl flex-grow h-[72vh] min-h-[500px] max-h-[850px] transition-all flex flex-col">
+          
+          <!-- Floating exit button for Theater Mode -->
+          <button id="theater-exit-btn" onclick="toggleTheaterMode()" class="hidden absolute top-3 right-3 z-50 px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-xl flex items-center gap-1.5">
+            <i class="fa-solid fa-compress"></i> Tutup Teater
+          </button>
+
+          <!-- Safe Iframe Container -->
+          <div id="game-active-iframe-container" class="relative w-full flex-grow bg-slate-950 overflow-hidden">
+            <!-- Iframe injected via JS -->
+          </div>
         </div>
+
+        <!-- Meta Info & Source Link below the game -->
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span id="gp-meta-category" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-purple-900/60 text-purple-300">Kategori</span>
+              <span id="gp-meta-diff" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-900/50 text-amber-300">Mudah</span>
+            </div>
+            <p id="gp-meta-description" class="text-slate-400 text-xs">Penerangan aktiviti permainan.</p>
+          </div>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <a id="gp-meta-external-link" href="#" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition inline-flex items-center gap-2">
+              <span>Buka Tab Asal</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+          </div>
+        </div>
+
       </div>
 
     </div>
 
   </main>
 
-  <!-- FOOTER -->
-  <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-auto transition-colors">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-        
-        <div class="md:col-span-6 space-y-3">
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-pink via-brand-purple to-brand-blue flex items-center justify-center text-white shadow-sm">
-              <i class="fa-solid fa-gamepad"></i>
-            </div>
-            <span class="text-lg font-black bg-gradient-to-r from-brand-pink via-brand-purple to-brand-blue bg-clip-text text-transparent">
+  <!-- FOOTER (Desktop only or when on standard views) -->
+  <footer id="main-footer" class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-auto transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+        <div>
+          <div class="flex items-center justify-center sm:justify-start gap-2">
+            <span class="font-black text-sm bg-gradient-to-r from-brand-pink via-brand-purple to-brand-blue bg-clip-text text-transparent">
               FREE GAME HUB
             </span>
           </div>
-          <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed max-w-md">
-            FREE GAME HUB — Main, Teroka dan Nikmati Pelbagai Game Percuma. Portal permainan web interaktif santai untuk murid dan guru tanpa halangan pendaftaran.
+          <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
+            FREE GAME HUB — Main, Teroka dan Nikmati Pelbagai Game Percuma.
           </p>
-          <div class="text-xs text-slate-500 dark:text-slate-400 font-semibold pt-1">
-            © 2026 Tajwid Plus Empire. Hak Cipta Terpelihara.
-          </div>
         </div>
-
-        <div class="md:col-span-3 space-y-2">
-          <h4 class="font-bold text-xs text-slate-800 dark:text-slate-200 uppercase tracking-wider">Navigasi Utama</h4>
-          <ul class="space-y-1.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium">
-            <li><button onclick="navigateTo('home')" class="hover:text-brand-purple transition">Home</button></li>
-            <li><button onclick="navigateTo('all-games')" class="hover:text-brand-purple transition">Semua Game</button></li>
-            <li><button onclick="navigateTo('categories-section')" class="hover:text-brand-purple transition">Kategori</button></li>
-          </ul>
+        <div class="text-xs text-slate-500 dark:text-slate-400 font-semibold">
+          © 2026 Tajwid Plus Empire. Hak Cipta Terpelihara.
         </div>
-
-        <div class="md:col-span-3 space-y-2">
-          <h4 class="font-bold text-xs text-slate-800 dark:text-slate-200 uppercase tracking-wider">Pengehosan & Status</h4>
-          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 text-xs space-y-1.5 text-slate-600 dark:text-slate-300">
-            <div><i class="fa-solid fa-server mr-2 text-emerald-500"></i> Dioptimumkan untuk Vercel & Netlify</div>
-            <div><i class="fa-solid fa-mobile mr-2 text-blue-500"></i> Navigasi Pantas Gaya App Handphone</div>
-          </div>
-        </div>
-
       </div>
     </div>
   </footer>
 
-  <!-- MOBILE BOTTOM APP NAVIGATION BAR (3 Clean Tabs without Favorites) -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 glassmorphism border-t border-slate-200/90 dark:border-slate-800/90 px-4 py-2 shadow-2xl">
-    <div class="grid grid-cols-3 gap-2 items-center text-center">
+  <!-- MOBILE BOTTOM APP NAVIGATION DOCK (Native App Experience) -->
+  <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 z-50 glassmorphism border-t border-slate-200/90 dark:border-slate-800/90 px-2 py-2 shadow-2xl transition-transform duration-300">
+    <div class="grid grid-cols-4 gap-1 items-center text-center">
       
-      <button onclick="navigateTo('home')" id="bottom-nav-home" class="bottom-tab-btn flex flex-col items-center justify-center py-1.5 rounded-2xl text-brand-purple transition active:scale-95">
-        <div class="w-10 h-7 rounded-full bg-purple-100 dark:bg-purple-900/60 flex items-center justify-center text-brand-purple">
-          <i class="fa-solid fa-house text-base"></i>
+      <!-- Tab 1: Home -->
+      <button onclick="switchAppTab('home')" id="mob-nav-home" class="mob-tab-btn flex flex-col items-center justify-center py-1 rounded-2xl text-brand-purple transition active:scale-90">
+        <div class="w-10 h-7 rounded-full bg-purple-100 dark:bg-purple-900/60 flex items-center justify-center text-brand-purple transition-all">
+          <i class="fa-solid fa-house text-sm"></i>
         </div>
-        <span class="text-[11px] font-bold mt-1 text-brand-purple">Home</span>
+        <span class="text-[10px] font-bold mt-0.5 text-brand-purple">Home</span>
       </button>
 
-      <button onclick="navigateTo('all-games')" id="bottom-nav-all" class="bottom-tab-btn flex flex-col items-center justify-center py-1.5 rounded-2xl text-slate-500 dark:text-slate-400 hover:text-brand-purple transition active:scale-95">
-        <div class="w-10 h-7 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400">
-          <i class="fa-solid fa-shapes text-base"></i>
+      <!-- Tab 2: Semua Game -->
+      <button onclick="switchAppTab('all-games')" id="mob-nav-all" class="mob-tab-btn flex flex-col items-center justify-center py-1 rounded-2xl text-slate-500 dark:text-slate-400 transition active:scale-90">
+        <div class="w-10 h-7 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 transition-all">
+          <i class="fa-solid fa-shapes text-sm"></i>
         </div>
-        <span class="text-[11px] font-medium mt-1">Semua</span>
+        <span class="text-[10px] font-medium mt-0.5">Semua</span>
       </button>
 
-      <button onclick="navigateTo('categories-section')" id="bottom-nav-cat" class="bottom-tab-btn flex flex-col items-center justify-center py-1.5 rounded-2xl text-slate-500 dark:text-slate-400 hover:text-brand-purple transition active:scale-95">
-        <div class="w-10 h-7 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400">
-          <i class="fa-solid fa-layer-group text-base"></i>
+      <!-- Tab 3: Kategori -->
+      <button onclick="switchAppTab('categories')" id="mob-nav-cat" class="mob-tab-btn flex flex-col items-center justify-center py-1 rounded-2xl text-slate-500 dark:text-slate-400 transition active:scale-90">
+        <div class="w-10 h-7 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 transition-all">
+          <i class="fa-solid fa-layer-group text-sm"></i>
         </div>
-        <span class="text-[11px] font-medium mt-1">Kategori</span>
+        <span class="text-[10px] font-medium mt-0.5">Kategori</span>
+      </button>
+
+      <!-- Tab 4: Bahan Lain -->
+      <button onclick="switchAppTab('other-products')" id="mob-nav-products" class="mob-tab-btn flex flex-col items-center justify-center py-1 rounded-2xl text-slate-500 dark:text-slate-400 transition active:scale-90">
+        <div class="w-10 h-7 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 transition-all">
+          <i class="fa-solid fa-crown text-sm"></i>
+        </div>
+        <span class="text-[10px] font-medium mt-0.5">Bahan Lain</span>
       </button>
 
     </div>
   </nav>
 
-  <!-- TOAST NOTIFICATION MESSAGE BOX -->
-  <div id="toast" class="fixed bottom-24 md:bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 max-w-sm w-full px-4">
-    <div id="toast-content" class="rounded-2xl shadow-2xl p-3.5 flex items-center gap-3 border text-xs sm:text-sm font-semibold bg-emerald-50 dark:bg-emerald-950 border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200">
+  <!-- TOAST NOTIFICATION BOX -->
+  <div id="toast" class="fixed bottom-20 md:bottom-6 right-4 z-50 transform translate-y-24 opacity-0 pointer-events-none transition-all duration-300 max-w-sm w-full px-3">
+    <div id="toast-content" class="rounded-2xl shadow-2xl p-3 flex items-center gap-3 border text-xs font-semibold bg-emerald-50 dark:bg-emerald-950 border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200">
       <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-500 text-base"></i>
-      <span id="toast-message">Mesej notifikasi</span>
+      <span id="toast-message">Notifikasi</span>
     </div>
   </div>
 
   <script>
     /* ==========================================================================
-       1. DATA STRUCTURE (THE 6 OFFICIAL GAMES)
+       1. DATA KOLEKSI 15 GAME RASMI (DISUSUN DARI TAHUN 1 HINGGA TAHUN 6)
        ========================================================================== */
-    const CATEGORIES = [
-      "Bahasa Melayu",
-      "Matematik"
-    ];
-
     function getCute3DIcon(iconType) {
       const icons = {
+        math3d: `
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-400 via-indigo-300 to-blue-200 clay-surface flex items-center justify-center transform rotate-3 transition-transform group-hover:scale-110">
+              <i class="fa-solid fa-calculator text-3xl text-indigo-950 drop-shadow-sm"></i>
+            </div>
+            <span class="absolute -top-2 -right-1 text-base">🔢</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">➕</span>
+            <span class="absolute top-0 -left-2 text-xs">💡</span>
+          </div>`,
         book3d: `
           <div class="relative w-20 h-20 flex items-center justify-center">
             <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-400 via-orange-300 to-yellow-200 clay-surface flex items-center justify-center transform -rotate-3 transition-transform group-hover:rotate-6">
@@ -609,6 +976,60 @@
             <span class="absolute -top-1 -right-1 text-base">✨</span>
             <span class="absolute -bottom-1 -left-1 text-sm">🎈</span>
             <span class="absolute top-0 -left-1 text-xs">⭐</span>
+          </div>`,
+        mathYear1_3d: `
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-400 via-teal-400 to-blue-500 clay-surface flex items-center justify-center transform -rotate-3 transition-transform group-hover:scale-110">
+              <i class="fa-solid fa-cubes text-3xl text-white drop-shadow-sm"></i>
+            </div>
+            <span class="absolute -top-2 -right-1 text-base">🔢</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">➕</span>
+            <span class="absolute top-0 -left-2 text-xs">📐</span>
+          </div>`,
+        mathYear2_3d: `
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-400 via-sky-500 to-indigo-500 clay-surface flex items-center justify-center transform rotate-2 transition-transform group-hover:scale-110">
+              <i class="fa-solid fa-calculator text-3xl text-white drop-shadow-sm"></i>
+            </div>
+            <span class="absolute -top-2 -right-1 text-base">⏱️</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">➖</span>
+            <span class="absolute top-0 -left-2 text-xs">💯</span>
+          </div>`,
+        mathYear3_3d: `
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-teal-400 via-emerald-400 to-cyan-500 clay-surface flex items-center justify-center transform rotate-3 transition-transform group-hover:scale-110">
+              <i class="fa-solid fa-shapes text-3xl text-white drop-shadow-sm"></i>
+            </div>
+            <span class="absolute -top-2 -right-1 text-base">✖️</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">➗</span>
+            <span class="absolute top-0 -left-2 text-xs">🪙</span>
+          </div>`,
+        mathYear4_3d: `
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500 via-blue-500 to-teal-400 clay-surface flex items-center justify-center transform -rotate-2 transition-transform group-hover:scale-110">
+              <i class="fa-solid fa-compass-drafting text-3xl text-white drop-shadow-sm"></i>
+            </div>
+            <span class="absolute -top-2 -right-1 text-base">📐</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">🧭</span>
+            <span class="absolute top-0 -left-2 text-xs">🧮</span>
+          </div>`,
+        mathYear5_3d: `
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-500 via-fuchsia-500 to-indigo-600 clay-surface flex items-center justify-center transform -rotate-3 transition-transform group-hover:scale-110">
+              <i class="fa-solid fa-square-root-variable text-3xl text-white drop-shadow-sm"></i>
+            </div>
+            <span class="absolute -top-2 -right-1 text-base">📊</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">🎯</span>
+            <span class="absolute top-0 -left-2 text-xs">📐</span>
+          </div>`,
+        mathYear6_3d: `
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-500 to-rose-500 clay-surface flex items-center justify-center transform rotate-3 transition-transform group-hover:scale-110">
+              <i class="fa-solid fa-chart-pie text-3xl text-white drop-shadow-sm"></i>
+            </div>
+            <span class="absolute -top-2 -right-1 text-base">🏆</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">📈</span>
+            <span class="absolute top-0 -left-2 text-xs">👑</span>
           </div>`,
         bookYear2_3d: `
           <div class="relative w-20 h-20 flex items-center justify-center">
@@ -628,6 +1049,33 @@
             <span class="absolute -bottom-1 -left-1 text-sm">🌟</span>
             <span class="absolute top-0 -left-2 text-xs">📘</span>
           </div>`,
+        bookYear4_3d: `
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500 via-blue-500 to-indigo-400 clay-surface flex items-center justify-center transform rotate-2 transition-transform group-hover:scale-110">
+              <i class="fa-solid fa-medal text-3xl text-white drop-shadow-sm"></i>
+            </div>
+            <span class="absolute -top-2 -right-1 text-base">🎖️</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">🧭</span>
+            <span class="absolute top-0 -left-2 text-xs">📜</span>
+          </div>`,
+        bookYear5_3d: `
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-600 to-pink-500 clay-surface flex items-center justify-center transform -rotate-2 transition-transform group-hover:scale-110">
+              <i class="fa-solid fa-award text-3xl text-white drop-shadow-sm"></i>
+            </div>
+            <span class="absolute -top-2 -right-1 text-base">⭐</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">🎯</span>
+            <span class="absolute top-0 -left-2 text-xs">📖</span>
+          </div>`,
+        bookYear6_3d: `
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-500 via-amber-500 to-yellow-300 clay-surface flex items-center justify-center transform rotate-3 transition-transform group-hover:scale-110">
+              <i class="fa-solid fa-crown text-3xl text-white drop-shadow-sm"></i>
+            </div>
+            <span class="absolute -top-2 -right-1 text-base">👑</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">🎓</span>
+            <span class="absolute top-0 -left-2 text-xs">🏆</span>
+          </div>`,
         tag3d: `
           <div class="relative w-20 h-20 flex items-center justify-center">
             <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-400 via-pink-300 to-amber-200 clay-surface flex items-center justify-center transform rotate-3 transition-transform group-hover:scale-110">
@@ -646,305 +1094,414 @@
             <span class="absolute -bottom-1 -left-1 text-sm">🔤</span>
             <span class="absolute top-0 -left-1 text-xs">🎵</span>
           </div>`,
-        math3d: `
+        crossword3d: `
           <div class="relative w-20 h-20 flex items-center justify-center">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-400 via-indigo-300 to-blue-200 clay-surface flex items-center justify-center transform rotate-3 transition-transform group-hover:scale-110">
-              <i class="fa-solid fa-calculator text-3xl text-indigo-950 drop-shadow-sm"></i>
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-teal-500 via-emerald-400 to-lime-300 clay-surface flex items-center justify-center transform rotate-2 transition-transform group-hover:scale-110">
+              <i class="fa-solid fa-puzzle-piece text-3xl text-teal-950 drop-shadow-sm"></i>
             </div>
-            <span class="absolute -top-2 -right-1 text-base">🔢</span>
-            <span class="absolute -bottom-1 -left-1 text-sm">➕</span>
+            <span class="absolute -top-2 -right-1 text-base">✏️</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">💡</span>
+            <span class="absolute top-0 -left-2 text-xs">🧩</span>
+          </div>`,
+        brainCrossword3d: `
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-fuchsia-600 via-pink-500 to-amber-300 clay-surface flex items-center justify-center transform -rotate-2 transition-transform group-hover:rotate-6">
+              <i class="fa-solid fa-brain text-3xl text-white drop-shadow-sm"></i>
+            </div>
+            <span class="absolute -top-2 -right-1 text-base">🧠</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">⚡</span>
             <span class="absolute top-0 -left-2 text-xs">💡</span>
+          </div>`,
+        englishYear1_3d: `
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-500 via-pink-400 to-amber-300 clay-surface flex items-center justify-center transform rotate-3 transition-transform group-hover:scale-110">
+              <i class="fa-solid fa-language text-3xl text-white drop-shadow-sm"></i>
+            </div>
+            <span class="absolute -top-2 -right-1 text-base">🔤</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">🌟</span>
+            <span class="absolute top-0 -left-2 text-xs">🇬🇧</span>
+          </div>`,
+        englishYear2_3d: `
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-orange-400 via-amber-300 to-yellow-200 clay-surface flex items-center justify-center transform -rotate-3 transition-transform group-hover:rotate-6">
+              <i class="fa-solid fa-comments text-3xl text-amber-950 drop-shadow-sm"></i>
+            </div>
+            <span class="absolute -top-2 -right-1 text-base">💬</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">🎯</span>
+            <span class="absolute top-0 -left-2 text-xs">📖</span>
+          </div>`,
+        englishYear3_3d: `
+          <div class="relative w-20 h-20 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-400 clay-surface flex items-center justify-center transform rotate-2 transition-transform group-hover:scale-110">
+              <i class="fa-solid fa-book-bookmark text-3xl text-white drop-shadow-sm"></i>
+            </div>
+            <span class="absolute -top-2 -right-1 text-base">✨</span>
+            <span class="absolute -bottom-1 -left-1 text-sm">🏅</span>
+            <span class="absolute top-0 -left-2 text-xs">📚</span>
           </div>`
       };
       return icons[iconType] || icons.book3d;
     }
 
-    const SEED_GAMES = [
+    // Koleksi Rasmi disusun mengikut tahun (Prasekolah -> Tahun 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> Pengukuhan)
+    const OFFICIAL_GAMES = [
+      {
+        id: "matematik-5-7-tahun",
+        name: "Game Matematik 5-7 Tahun",
+        order: 1,
+        description: "Aktiviti interaktif pembelajaran Matematik untuk kanak-kanak prasekolah dan awal persekolahan (5 hingga 7 tahun). Kuasai asas nombor dan operasi mudah.",
+        icon3d: "math3d",
+        bgGradient: "from-sky-400 via-indigo-500 to-purple-600",
+        category: "Matematik",
+        difficulty: "Mudah",
+        url: "https://gamematematikprasekolah.vercel.app/",
+        isFeatured: true
+      },
       {
         id: "pengembaraan-bm-tahun-1",
         name: "Bahasa Melayu Tahun 1",
-        slug: "bahasa-melayu-tahun-1",
-        description: "Pengembaraan interaktif Bahasa Melayu Tahun 1. Pelajari asas tatabahasa, ejaan, suku kata dan kosa kata melalui aktiviti pembelajaran yang menyeronokkan.",
+        order: 2,
+        description: "Pengembaraan interaktif Bahasa Melayu Tahun 1. Pelajari asas tatabahasa, ejaan, suku kata dan kosa kata melalui aktiviti menyeronokkan.",
         icon3d: "book3d",
         bgGradient: "from-amber-400 via-pink-400 to-purple-500",
         category: "Bahasa Melayu",
         difficulty: "Mudah",
-        type: "EMBED",
         url: "https://pengembaraanbahasamelayutahun1.vercel.app/",
-        dateAdded: "2026-03-20",
-        isActive: true,
-        isFeatured: true,
-        isNew: true,
-        creator: "Pengembaraan Bahasa Melayu",
-        credits: "Dihoskan di Vercel untuk pembelajaran murid Tahun 1."
+        isFeatured: true
+      },
+      {
+        id: "english-year-1",
+        name: "English Adventure Year 1",
+        order: 3,
+        description: "Fun interactive English adventure for Year 1 students covering phonics, basic vocabulary, listening skills, and simple grammar.",
+        icon3d: "englishYear1_3d",
+        bgGradient: "from-rose-500 via-pink-500 to-amber-500",
+        category: "Bahasa Inggeris",
+        difficulty: "Mudah",
+        url: "https://englishadventureyear1.vercel.app/",
+        isFeatured: true
+      },
+      {
+        id: "matematik-tahun-1",
+        name: "Matematik Tahun 1",
+        order: 4,
+        description: "Aktiviti interaktif pembelajaran Matematik Tahun 1 merangkumi penguasaan nombor hingga 100, operasi asas tambah tolak, wang, dan bentuk secara menyeronokkan.",
+        icon3d: "mathYear1_3d",
+        bgGradient: "from-cyan-500 via-teal-500 to-blue-600",
+        category: "Matematik",
+        difficulty: "Mudah",
+        url: "https://matematiktahun1.vercel.app/",
+        isFeatured: true
       },
       {
         id: "bahasa-melayu-tahun-2",
         name: "Bahasa Melayu Tahun 2",
-        slug: "bahasa-melayu-tahun-2",
-        description: "Aktiviti pengukuhan Bahasa Melayu Tahun 2 merangkumi tatabahasa asas, imbuhan, kosa kata dan bina ayat secara interaktif serta menarik.",
+        order: 5,
+        description: "Aktiviti pengukuhan Bahasa Melayu Tahun 2 merangkumi tatabahasa asas, imbuhan, kosa kata dan bina ayat secara interaktif.",
         icon3d: "bookYear2_3d",
         bgGradient: "from-violet-500 via-purple-500 to-indigo-600",
         category: "Bahasa Melayu",
         difficulty: "Mudah",
-        type: "EMBED",
         url: "https://bahasamelayutahun2.vercel.app/",
-        dateAdded: "2026-10-17",
-        isActive: true,
-        isFeatured: true,
-        isNew: true,
-        creator: "Pengembaraan Bahasa Melayu Tahun 2",
-        credits: "Dihoskan di Vercel untuk pembelajaran murid Tahun 2."
+        isFeatured: true
+      },
+      {
+        id: "english-year-2",
+        name: "English Adventure Year 2",
+        order: 6,
+        description: "Exciting English learning quest for Year 2 covering everyday sentences, vocabulary building, reading comprehension and fun quizzes.",
+        icon3d: "englishYear2_3d",
+        bgGradient: "from-orange-500 via-amber-500 to-yellow-500",
+        category: "Bahasa Inggeris",
+        difficulty: "Mudah",
+        url: "https://englishadventureyear2.vercel.app/",
+        isFeatured: true
+      },
+      {
+        id: "matematik-tahun-2",
+        name: "Matematik Tahun 2",
+        order: 7,
+        description: "Aktiviti pembelajaran interaktif Matematik Tahun 2 merangkumi nombor hingga 1000, operasi asas tambah, tolak, darab, bahagi, pecahan, wang, masa dan bentuk.",
+        icon3d: "mathYear2_3d",
+        bgGradient: "from-blue-500 via-sky-600 to-indigo-600",
+        category: "Matematik",
+        difficulty: "Mudah",
+        url: "https://matematiktahun2.vercel.app/",
+        isFeatured: true
       },
       {
         id: "bahasa-melayu-tahun-3",
         name: "Bahasa Melayu Tahun 3",
-        slug: "bahasa-melayu-tahun-3",
+        order: 8,
         description: "Pengukuhan Bahasa Melayu Tahun 3 merangkumi tatabahasa, kosa kata, binaan ayat, penjodoh bilangan dan pemahaman secara interaktif.",
         icon3d: "bookYear3_3d",
         bgGradient: "from-emerald-400 via-teal-500 to-cyan-600",
         category: "Bahasa Melayu",
         difficulty: "Sederhana",
-        type: "EMBED",
         url: "https://gamebahasamelayutahun3.vercel.app/",
-        dateAdded: "2026-10-17",
-        isActive: true,
-        isFeatured: true,
-        isNew: true,
-        creator: "Pengembaraan Bahasa Melayu Tahun 3",
-        credits: "Dihoskan di Vercel untuk pembelajaran murid Tahun 3."
+        isFeatured: true
+      },
+      {
+        id: "english-year-3",
+        name: "English Adventure Year 3",
+        order: 9,
+        description: "Year 3 interactive English adventure focusing on grammar tenses, rich vocabulary, sentence construction, and comprehension challenges.",
+        icon3d: "englishYear3_3d",
+        bgGradient: "from-indigo-600 via-purple-600 to-pink-500",
+        category: "Bahasa Inggeris",
+        difficulty: "Sederhana",
+        url: "https://englishadventureyear3.vercel.app/",
+        isFeatured: true
+      },
+      {
+        id: "matematik-tahun-3",
+        name: "Matematik Tahun 3",
+        order: 10,
+        description: "Aktiviti interaktif Matematik Tahun 3 merangkumi operasi darab, bahagi, pecahan, perpuluhan, wang, masa dan bentuk secara menyeronokkan.",
+        icon3d: "mathYear3_3d",
+        bgGradient: "from-teal-400 via-emerald-500 to-cyan-600",
+        category: "Matematik",
+        difficulty: "Sederhana",
+        url: "https://matematiktahun3.vercel.app/",
+        isFeatured: true
+      },
+      {
+        id: "bahasa-melayu-tahun-4",
+        name: "Bahasa Melayu Tahun 4",
+        order: 11,
+        description: "Pengukuhan Bahasa Melayu Tahun 4 merangkumi tatabahasa lanjutan, kosa kata, binaan ayat, peribahasa dan pemahaman secara interaktif.",
+        icon3d: "bookYear4_3d",
+        bgGradient: "from-cyan-500 via-blue-600 to-indigo-600",
+        category: "Bahasa Melayu",
+        difficulty: "Sederhana",
+        url: "https://bahasamelayutahun4.vercel.app/",
+        isFeatured: true
+      },
+      {
+        id: "matematik-tahun-4",
+        name: "Matematik Tahun 4",
+        order: 12,
+        description: "Aktiviti interaktif Matematik Tahun 4 merangkumi nombor hingga 100,000, operasi bergabung, pecahan, perpuluhan, peratus, wang, masa, panjang, jisim dan sudut.",
+        icon3d: "mathYear4_3d",
+        bgGradient: "from-cyan-600 via-blue-600 to-teal-600",
+        category: "Matematik",
+        difficulty: "Sederhana",
+        url: "https://matematiktahun4.vercel.app/",
+        isFeatured: true
+      },
+      {
+        id: "bahasa-melayu-tahun-5",
+        name: "Bahasa Melayu Tahun 5",
+        order: 13,
+        description: "Aktiviti interaktif Bahasa Melayu Tahun 5 merangkumi tatabahasa lanjutan, pengayaan kosa kata, morfologi, sintaksis dan pemahaman.",
+        icon3d: "bookYear5_3d",
+        bgGradient: "from-indigo-600 via-purple-600 to-pink-500",
+        category: "Bahasa Melayu",
+        difficulty: "Sederhana",
+        url: "https://bahasamelayutahun5.vercel.app/",
+        isFeatured: true
+      },
+      {
+        id: "matematik-tahun-5",
+        name: "Matematik Tahun 5",
+        order: 14,
+        description: "Cabaran interaktif Matematik Tahun 5 merangkumi nombor hingga 1,000,000, pecahan, perpuluhan, peratus, wang, masa, panjang, jisim dan ruang secara kritis.",
+        icon3d: "mathYear5_3d",
+        bgGradient: "from-purple-600 via-indigo-600 to-pink-600",
+        category: "Matematik",
+        difficulty: "Sederhana",
+        url: "https://matematiktahun5.vercel.app/",
+        isFeatured: true
+      },
+      {
+        id: "bahasa-melayu-tahun-6",
+        name: "Bahasa Melayu Tahun 6",
+        order: 15,
+        description: "Penguasaan kemuncak Bahasa Melayu Tahun 6 merangkumi tatabahasa aras tinggi, kosa kata lanjutan, peribahasa, binaan ayat dan pemahaman mendalam.",
+        icon3d: "bookYear6_3d",
+        bgGradient: "from-rose-500 via-amber-500 to-orange-600",
+        category: "Bahasa Melayu",
+        difficulty: "Mencabar",
+        url: "https://bahasamelayutahun6.vercel.app/",
+        isFeatured: true
+      },
+      {
+        id: "matematik-tahun-6",
+        name: "Matematik Tahun 6",
+        order: 16,
+        description: "Cabaran Matematik Tahun 6 merangkumi kebolehjadian, nisbah dan kadaran, koordinat, penyelesaian masalah harian, carta pai, serta pengurusan kewangan pintar.",
+        icon3d: "mathYear6_3d",
+        bgGradient: "from-amber-500 via-orange-600 to-rose-600",
+        category: "Matematik",
+        difficulty: "Mencabar",
+        url: "https://matematiktahun6.vercel.app/",
+        isFeatured: true
       },
       {
         id: "nama-khas-nama-am",
         name: "Game Kata Nama Khas & Kata Nama Am",
-        slug: "nama-khas-nama-am",
-        description: "Uji dan perkukuhkan kefahaman membezakan Kata Nama Khas dan Kata Nama Am melalui cabaran permainan interaktif yang menyeronokkan.",
+        order: 17,
+        description: "Uji dan perkukuhkan kefahaman membezakan Kata Nama Khas dan Kata Nama Am melalui cabaran interaktif yang menarik.",
         icon3d: "tag3d",
         bgGradient: "from-rose-400 via-pink-500 to-purple-600",
         category: "Bahasa Melayu",
         difficulty: "Mudah",
-        type: "EMBED",
         url: "https://gamenamakhasam.netlify.app/",
-        dateAdded: "2026-03-21",
-        isActive: true,
-        isFeatured: true,
-        isNew: true,
-        creator: "Cikgu BM Interaktif",
-        credits: "Dihoskan di Netlify untuk latihan tatabahasa murid."
+        isFeatured: true
       },
       {
         id: "konsonan-dan-vokal",
         name: "Misi Huruf Konsonan & Vokal",
-        slug: "misi-konsonan-vokal",
+        order: 18,
         description: "Misi pengembaraan mengecam dan memadankan huruf vokal serta konsonan dengan mudah, santai dan beranimasi.",
         icon3d: "abc3d",
         bgGradient: "from-teal-400 via-emerald-400 to-cyan-500",
         category: "Bahasa Melayu",
         difficulty: "Mudah",
-        type: "EMBED",
         url: "https://misikonsonanvokal.netlify.app/",
-        dateAdded: "2026-03-21",
-        isActive: true,
-        isFeatured: true,
-        isNew: true,
-        creator: "Cikgu BM Interaktif",
-        credits: "Dihoskan di Netlify untuk asas literasi dan fonik murid."
+        isFeatured: false
       },
       {
-        id: "matematik-5-7-tahun",
-        name: "Game Matematik 5-7 Tahun",
-        slug: "game-matematik-5-7-tahun",
-        description: "Aktiviti interaktif pembelajaran Matematik untuk kanak-kanak prasekolah dan awal persekolahan (5 hingga 7 tahun). Kuasai asas nombor, membilang dan operasi matematik santai.",
-        icon3d: "math3d",
-        bgGradient: "from-sky-400 via-indigo-500 to-purple-600",
-        category: "Matematik",
+        id: "teka-silang-kata-kanak-kanak",
+        name: "Teka Silang Kata Kanak-Kanak",
+        order: 19,
+        description: "Permainan teka silang kata interaktif menguji minda dan kosa kata Bahasa Melayu untuk kanak-kanak secara santai dan menyeronokkan.",
+        icon3d: "crossword3d",
+        bgGradient: "from-teal-400 via-emerald-500 to-cyan-600",
+        category: "Bahasa Melayu",
         difficulty: "Mudah",
-        type: "EMBED",
-        url: "https://gamematematikprasekolah.vercel.app/",
-        dateAdded: "2026-03-22",
-        isActive: true,
-        isFeatured: true,
-        isNew: true,
-        creator: "Cikgu Matematik Prasekolah",
-        credits: "Dihoskan di Vercel untuk asas numerasi kanak-kanak 5-7 tahun."
+        url: "https://tekasilangkatakanakkanak.vercel.app/",
+        isFeatured: true
+      },
+      {
+        id: "teka-silang-kata-cabaran-minda",
+        name: "Teka Silang Kata Cabaran Minda",
+        order: 20,
+        description: "Cabaran teka silang kata menguji kepintaran minda, kosa kata mantap, dan daya pemikiran kritis dalam Bahasa Melayu secara interaktif.",
+        icon3d: "brainCrossword3d",
+        bgGradient: "from-fuchsia-600 via-pink-600 to-purple-700",
+        category: "Bahasa Melayu",
+        difficulty: "Sederhana",
+        url: "https://tekasilangkatacabaranminda.vercel.app/",
+        isFeatured: true
       }
     ];
 
     /* ==========================================================================
-       2. APP STATE
+       2. APP NAVIGATION & TAB CONTROLLER (Mobile App Experience)
        ========================================================================== */
-    let gamesDatabase = [];
-    let lastLuckyGameId = null;
-    let activePlayingGame = null;
+    let currentActiveTab = 'home';
+    let activeGamePlaying = null;
+    let selectedCategoryTab = 'ALL';
+    let lastLuckyId = null;
 
-    function initDatabase() {
-      gamesDatabase = [...SEED_GAMES];
-    }
+    function switchAppTab(tabName) {
+      currentActiveTab = tabName;
 
-    /* ==========================================================================
-       3. THEME & TOAST UI HELPERS
-       ========================================================================== */
-    function initTheme() {
-      const savedTheme = localStorage.getItem('fgh_theme');
-      const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      if (isDark) {
-        document.documentElement.classList.add('dark');
-        const icon = document.getElementById('theme-icon');
-        if (icon) icon.className = 'fa-solid fa-sun text-lg text-amber-400';
-      } else {
-        document.documentElement.classList.remove('dark');
-        const icon = document.getElementById('theme-icon');
-        if (icon) icon.className = 'fa-solid fa-moon text-lg';
-      }
-    }
+      // Sembunyikan semua tab views
+      document.getElementById('tab-view-home').classList.add('hidden');
+      document.getElementById('tab-view-all-games').classList.add('hidden');
+      document.getElementById('tab-view-categories').classList.add('hidden');
+      const otherView = document.getElementById('tab-view-other-products');
+      if (otherView) otherView.classList.add('hidden');
 
-    function toggleTheme() {
-      const isDark = document.documentElement.classList.toggle('dark');
-      localStorage.setItem('fgh_theme', isDark ? 'dark' : 'light');
-      const icon = document.getElementById('theme-icon');
-      if (icon) {
-        icon.className = isDark ? 'fa-solid fa-sun text-lg text-amber-400' : 'fa-solid fa-moon text-lg';
-      }
-      showToast(isDark ? "Mod Gelap Diaktifkan" : "Mod Cerah Diaktifkan", "info");
-    }
-
-    function showToast(message, type = "success") {
-      const toast = document.getElementById('toast');
-      const toastContent = document.getElementById('toast-content');
-      const toastMessage = document.getElementById('toast-message');
-      const toastIcon = document.getElementById('toast-icon');
-
-      if (!toast || !toastContent || !toastMessage || !toastIcon) return;
-
-      toastMessage.textContent = message;
-
-      if (type === "success") {
-        toastContent.className = "rounded-2xl shadow-2xl p-3.5 flex items-center gap-3 border text-xs sm:text-sm font-semibold bg-emerald-50 dark:bg-emerald-950 border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200";
-        toastIcon.className = "fa-solid fa-circle-check text-emerald-500 text-base";
-      } else if (type === "error") {
-        toastContent.className = "rounded-2xl shadow-2xl p-3.5 flex items-center gap-3 border text-xs sm:text-sm font-semibold bg-rose-50 dark:bg-rose-950 border-rose-300 dark:border-rose-800 text-rose-800 dark:text-rose-200";
-        toastIcon.className = "fa-solid fa-circle-xmark text-rose-500 text-base";
-      } else {
-        toastContent.className = "rounded-2xl shadow-2xl p-3.5 flex items-center gap-3 border text-xs sm:text-sm font-semibold bg-purple-50 dark:bg-purple-950 border-purple-300 dark:border-purple-800 text-purple-800 dark:text-purple-200";
-        toastIcon.className = "fa-solid fa-bell text-purple-500 text-base";
+      // Paparkan tab yang dipilih
+      const targetView = document.getElementById(`tab-view-${tabName}`);
+      if (targetView) {
+        targetView.classList.remove('hidden');
       }
 
-      toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
-      clearTimeout(window.toastTimer);
-      window.toastTimer = setTimeout(() => {
-        toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
-      }, 3000);
+      // Kemas kini butang Mobile Navigation Dock
+      updateMobileNavDock(tabName);
+
+      // Kemas kini butang Desktop Navigation Bar
+      updateDesktopNav(tabName);
+
+      // Skrol ke atas secara licin
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    /* ==========================================================================
-       4. NAVIGATION & MOBILE BOTTOM NAV TAB ACTIVE INDICATORS
-       ========================================================================== */
-    function updateBottomNavTabs(target) {
+    function updateMobileNavDock(tabName) {
       const tabs = [
-        { id: 'bottom-nav-home', key: 'home' },
-        { id: 'bottom-nav-all', key: 'all-games' },
-        { id: 'bottom-nav-cat', key: 'categories-section' }
+        { key: 'home', id: 'mob-nav-home' },
+        { key: 'all-games', id: 'mob-nav-all' },
+        { key: 'categories', id: 'mob-nav-cat' },
+        { key: 'other-products', id: 'mob-nav-products' }
       ];
 
       tabs.forEach(t => {
-        const el = document.getElementById(t.id);
-        if (!el) return;
-        const iconContainer = el.querySelector('div');
-        const textSpan = el.querySelector('span');
+        const btn = document.getElementById(t.id);
+        if (!btn) return;
+        const iconWrap = btn.querySelector('div');
+        const textLabel = btn.querySelector('span');
 
-        if (t.key === target) {
-          el.className = "bottom-tab-btn flex flex-col items-center justify-center py-1.5 rounded-2xl text-brand-purple transition active:scale-95";
-          if (iconContainer) {
-            iconContainer.className = "w-10 h-7 rounded-full bg-purple-100 dark:bg-purple-900/60 flex items-center justify-center text-brand-purple";
-          }
-          if (textSpan) {
-            textSpan.className = "text-[11px] font-bold mt-1 text-brand-purple";
+        if (t.key === tabName) {
+          const colorClass = t.key === 'other-products' ? 'text-amber-500' : 'text-brand-purple';
+          const bgPill = t.key === 'other-products' ? 'bg-amber-100 dark:bg-amber-900/60' : 'bg-purple-100 dark:bg-purple-900/60';
+          
+          btn.className = `mob-tab-btn flex flex-col items-center justify-center py-1 rounded-2xl ${colorClass} transition active:scale-90`;
+          if (iconWrap) iconWrap.className = `w-10 h-7 rounded-full ${bgPill} flex items-center justify-center ${colorClass} transition-all`;
+          if (textLabel) textLabel.className = `text-[10px] font-bold mt-0.5 ${colorClass}`;
+        } else {
+          btn.className = "mob-tab-btn flex flex-col items-center justify-center py-1 rounded-2xl text-slate-500 dark:text-slate-400 transition active:scale-90";
+          if (iconWrap) iconWrap.className = "w-10 h-7 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 transition-all";
+          if (textLabel) textLabel.className = "text-[10px] font-medium mt-0.5 text-slate-500 dark:text-slate-400";
+        }
+      });
+    }
+
+    function updateDesktopNav(tabName) {
+      const desktopTabs = [
+        { key: 'home', id: 'desk-nav-home' },
+        { key: 'all-games', id: 'desk-nav-all' },
+        { key: 'categories', id: 'desk-nav-cat' },
+        { key: 'other-products', id: 'desk-nav-products' }
+      ];
+
+      desktopTabs.forEach(t => {
+        const btn = document.getElementById(t.id);
+        if (!btn) return;
+
+        if (t.key === tabName) {
+          if (t.key === 'other-products') {
+            btn.className = "desk-nav-item px-4 py-2 rounded-xl text-sm font-bold bg-amber-100 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 transition flex items-center gap-2";
+          } else {
+            btn.className = "desk-nav-item px-4 py-2 rounded-xl text-sm font-bold bg-purple-100 dark:bg-purple-950/70 text-brand-purple dark:text-purple-300 transition flex items-center gap-2";
           }
         } else {
-          el.className = "bottom-tab-btn flex flex-col items-center justify-center py-1.5 rounded-2xl text-slate-500 dark:text-slate-400 hover:text-brand-purple transition active:scale-95";
-          if (iconContainer) {
-            iconContainer.className = "w-10 h-7 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400";
-          }
-          if (textSpan) {
-            textSpan.className = "text-[11px] font-medium mt-1 text-slate-500 dark:text-slate-400";
+          if (t.key === 'other-products') {
+            btn.className = "desk-nav-item px-4 py-2 rounded-xl text-sm font-semibold hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/40 text-amber-600 dark:text-amber-400 transition flex items-center gap-2";
+          } else {
+            btn.className = "desk-nav-item px-4 py-2 rounded-xl text-sm font-semibold hover:text-brand-purple hover:bg-purple-50 dark:hover:bg-slate-800/80 transition flex items-center gap-2";
           }
         }
       });
     }
 
-    function navigateTo(targetView) {
-      const homeView = document.getElementById('home-view');
-      const gameplayView = document.getElementById('gameplay-view');
-
-      updateBottomNavTabs(targetView);
-
-      if (targetView === 'home') {
-        homeView.classList.remove('hidden');
-        gameplayView.classList.add('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else if (targetView === 'all-games') {
-        homeView.classList.remove('hidden');
-        gameplayView.classList.add('hidden');
-        const el = document.getElementById('all-games');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      } else if (targetView === 'categories-section') {
-        homeView.classList.remove('hidden');
-        gameplayView.classList.add('hidden');
-        const el = document.getElementById('categories-section');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-
-    function focusSearch() {
-      navigateTo('all-games');
-      setTimeout(() => {
-        const input = document.getElementById('filter-search-input');
-        if (input) {
-          input.focus();
-          input.select();
-        }
-      }, 300);
-    }
-
     /* ==========================================================================
-       5. CARD COMPONENT GENERATOR
+       3. KAD PERMAINAN (CARD GENERATOR)
        ========================================================================== */
-    function createGameCardHtml(game) {
-      let badgeHtml = '';
-      if (game.isFeatured) {
-        badgeHtml += `<span class="bg-amber-400 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1"><i class="fa-solid fa-star text-[9px]"></i> Pilihan</span>`;
-      }
-      if (game.isNew) {
-        badgeHtml += `<span class="bg-pink-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">Baharu</span>`;
-      }
-
-      const cute3DElement = getCute3DIcon(game.icon3d || 'book3d');
-      const gradientBg = game.bgGradient || 'from-purple-500 via-pink-400 to-indigo-500';
+    function createGameCard(game) {
+      const cute3D = getCute3DIcon(game.icon3d);
+      const grad = game.bgGradient || 'from-purple-500 to-indigo-600';
 
       return `
         <div class="card-hover bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 overflow-hidden flex flex-col shadow-sm group">
-          <div class="relative h-44 w-full overflow-hidden bg-gradient-to-br ${gradientBg} flex items-center justify-center p-4">
+          <div class="relative h-40 w-full overflow-hidden bg-gradient-to-br ${grad} flex items-center justify-center p-4">
             <div class="absolute w-28 h-28 rounded-full bg-white/20 blur-xl"></div>
-            
             <div class="icon-3d-float z-10">
-              ${cute3DElement}
+              ${cute3D}
             </div>
-            
-            <div class="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
-              ${badgeHtml}
-            </div>
-
-            <span class="absolute bottom-2.5 right-3 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-950/60 text-white backdrop-blur-sm border border-white/20">
-              Web Interaktif
+            <span class="absolute top-3 left-3 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-950/60 text-white backdrop-blur-sm border border-white/20">
+              ${game.category}
+            </span>
+            <span class="absolute bottom-2.5 right-3 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500 text-white shadow-sm">
+              ${game.difficulty}
             </span>
           </div>
 
-          <div class="p-5 flex-grow flex flex-col justify-between space-y-3">
-            <div class="space-y-1.5">
-              <div class="flex items-center justify-between text-xs">
-                <span class="font-bold text-brand-purple tracking-wide uppercase text-[11px]">${game.category}</span>
-                <span class="font-semibold px-2 py-0.5 rounded-full text-[10px] text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 dark:text-emerald-300">${game.difficulty}</span>
-              </div>
+          <div class="p-4 flex-grow flex flex-col justify-between space-y-3">
+            <div class="space-y-1">
               <h3 class="font-extrabold text-base text-slate-900 dark:text-white group-hover:text-brand-purple transition leading-snug line-clamp-1">
                 ${game.name}
               </h3>
@@ -953,215 +1510,193 @@
               </p>
             </div>
 
-            <div class="pt-2">
-              <button 
-                onclick="openGameById('${game.id}')" 
-                class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-brand-pink via-brand-purple to-brand-blue hover:from-brand-purple hover:to-brand-deepPurple text-white font-bold text-xs tracking-wider uppercase shadow-md shadow-purple-500/10 hover:shadow-purple-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2"
-              >
-                <i class="fa-solid fa-play text-[11px]"></i> Main Sekarang
-              </button>
-            </div>
+            <button 
+              onclick="openGameById('${game.id}')" 
+              class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-brand-pink via-brand-purple to-brand-blue hover:from-brand-purple hover:to-brand-deepPurple active:scale-95 text-white font-bold text-xs tracking-wider uppercase shadow-md shadow-purple-500/15 transition flex items-center justify-center gap-2"
+            >
+              <i class="fa-solid fa-play text-[11px]"></i> Main Sekarang
+            </button>
           </div>
         </div>
       `;
     }
 
     /* ==========================================================================
-       6. RENDERING SECTIONS
+       4. LOGIK RENDERING TAB & PENAPIS
        ========================================================================== */
-    function renderHomePageSections() {
-      const featured = gamesDatabase.filter(g => g.isActive && g.isFeatured);
-      const featuredContainer = document.getElementById('featured-games-grid');
-      if (featuredContainer) {
-        featuredContainer.innerHTML = featured.map(g => createGameCardHtml(g)).join('');
+    function renderAppViews() {
+      // 1. Home Tab: Featured Games
+      const featured = OFFICIAL_GAMES.filter(g => g.isFeatured);
+      const homeFeaturedGrid = document.getElementById('home-featured-grid');
+      if (homeFeaturedGrid) {
+        homeFeaturedGrid.innerHTML = featured.map(g => createGameCard(g)).join('');
       }
 
-      const newGames = gamesDatabase.filter(g => g.isActive);
-      const newContainer = document.getElementById('new-games-grid');
-      if (newContainer) {
-        newContainer.innerHTML = newGames.map(g => createGameCardHtml(g)).join('');
-      }
+      // 2. All Games Tab
+      applyAllGamesFilter();
 
-      const catContainer = document.getElementById('categories-chips-container');
-      if (catContainer) {
-        catContainer.innerHTML = CATEGORIES.map(cat => {
-          const count = gamesDatabase.filter(g => g.isActive && g.category === cat).length;
-          return `
-            <button 
-              onclick="filterByCategory('${cat}')" 
-              class="px-5 py-2.5 rounded-2xl border-2 border-brand-purple/40 bg-purple-50/50 dark:bg-slate-900 text-xs font-bold text-brand-purple dark:text-purple-300 transition flex items-center gap-2.5 shadow-sm hover:scale-105 active:scale-95"
-            >
-              <span>${cat}</span>
-              <span class="px-2 py-0.5 rounded-full bg-brand-purple text-white text-[10px] font-black">${count}</span>
-            </button>
-          `;
-        }).join('');
-      }
-
-      const filterCatSelect = document.getElementById('filter-category-select');
-      if (filterCatSelect) {
-        filterCatSelect.innerHTML = '<option value="ALL">Semua Kategori</option>' + 
-          CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('');
-      }
-
-      applyFilters();
+      // 3. Category Tab
+      renderCategoryGames();
     }
 
-    function filterByCategory(categoryName) {
-      navigateTo('all-games');
-      const select = document.getElementById('filter-category-select');
-      if (select) {
-        select.value = categoryName;
-        applyFilters();
-      }
-    }
+    function applyAllGamesFilter() {
+      const searchInput = document.getElementById('tab-search-input');
+      const sortSelect = document.getElementById('tab-sort-select');
 
-    /* ==========================================================================
-       7. FILTER & SEARCH LOGIC
-       ========================================================================== */
-    function applyFilters() {
-      const searchInput = document.getElementById('filter-search-input');
-      const categorySelect = document.getElementById('filter-category-select');
-      const sortSelect = document.getElementById('filter-sort-select');
+      const keyword = (searchInput ? searchInput.value : '').trim().toLowerCase();
+      const sortBy = sortSelect ? sortSelect.value : 'year';
 
-      const searchKeyword = (searchInput ? searchInput.value : '').trim().toLowerCase();
-      const selectedCategory = categorySelect ? categorySelect.value : 'ALL';
-      const sortBy = sortSelect ? sortSelect.value : 'az';
-
-      let results = gamesDatabase.filter(game => {
-        if (!game.isActive) return false;
-
-        const matchSearch = !searchKeyword || 
-          game.name.toLowerCase().includes(searchKeyword) ||
-          game.description.toLowerCase().includes(searchKeyword);
-
-        const matchCat = selectedCategory === 'ALL' || game.category === selectedCategory;
-        return matchSearch && matchCat;
+      let results = OFFICIAL_GAMES.filter(g => {
+        return !keyword || g.name.toLowerCase().includes(keyword) || g.description.toLowerCase().includes(keyword);
       });
 
-      if (sortBy === 'az') {
+      if (sortBy === 'year') {
+        results.sort((a, b) => a.order - b.order);
+      } else if (sortBy === 'az') {
         results.sort((a, b) => a.name.localeCompare(b.name));
       } else if (sortBy === 'za') {
         results.sort((a, b) => b.name.localeCompare(a.name));
-      } else {
-        results.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
       }
 
-      const countDisplay = document.getElementById('game-count-display');
-      if (countDisplay) {
-        countDisplay.textContent = results.length;
-      }
+      const counter = document.getElementById('all-game-counter');
+      if (counter) counter.textContent = results.length;
 
-      const grid = document.getElementById('all-games-grid');
-      const noGames = document.getElementById('no-games-found');
+      const grid = document.getElementById('catalog-games-grid');
+      const emptyState = document.getElementById('catalog-empty-state');
 
       if (!grid) return;
 
       if (results.length === 0) {
         grid.innerHTML = '';
-        if (noGames) noGames.classList.remove('hidden');
+        if (emptyState) emptyState.classList.remove('hidden');
       } else {
-        if (noGames) noGames.classList.add('hidden');
-        grid.innerHTML = results.map(g => createGameCardHtml(g)).join('');
+        if (emptyState) emptyState.classList.add('hidden');
+        grid.innerHTML = results.map(g => createGameCard(g)).join('');
       }
     }
 
-    function resetFilters() {
-      const searchInput = document.getElementById('filter-search-input');
-      const categorySelect = document.getElementById('filter-category-select');
-      const sortSelect = document.getElementById('filter-sort-select');
+    function selectCategoryFilter(category) {
+      selectedCategoryTab = category;
 
-      if (searchInput) searchInput.value = '';
-      if (categorySelect) categorySelect.value = 'ALL';
-      if (sortSelect) sortSelect.value = 'az';
+      // Update button styling
+      const allBtn = document.getElementById('cat-card-all');
+      const bmBtn = document.getElementById('cat-card-bm');
+      const biBtn = document.getElementById('cat-card-bi');
+      const mathBtn = document.getElementById('cat-card-math');
 
-      applyFilters();
-      showToast("Carian telah ditetapkan semula", "info");
+      const activeClass = "p-4 rounded-2xl border-2 border-brand-purple bg-purple-50 dark:bg-purple-950/40 text-left transition active:scale-95";
+      const inactiveClass = "p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-purple text-left transition active:scale-95";
+
+      if (allBtn) allBtn.className = category === 'ALL' ? activeClass : inactiveClass;
+      if (bmBtn) bmBtn.className = category === 'Bahasa Melayu' ? activeClass : inactiveClass;
+      if (biBtn) biBtn.className = category === 'Bahasa Inggeris' ? activeClass : inactiveClass;
+      if (mathBtn) mathBtn.className = category === 'Matematik' ? activeClass : inactiveClass;
+
+      renderCategoryGames();
+    }
+
+    function renderCategoryGames() {
+      const grid = document.getElementById('category-games-grid');
+      const label = document.getElementById('cat-active-label');
+      if (!grid) return;
+
+      let filtered = [...OFFICIAL_GAMES];
+      let labelText = "Semua Kategori";
+
+      if (selectedCategoryTab !== 'ALL') {
+        filtered = OFFICIAL_GAMES.filter(g => g.category === selectedCategoryTab);
+        labelText = selectedCategoryTab;
+      }
+
+      // Pastikan tetap teratur mengikut tahun pembelajaran
+      filtered.sort((a, b) => a.order - b.order);
+
+      if (label) {
+        label.innerHTML = `<i class="fa-solid fa-layer-group text-brand-purple"></i> Senarai Game: <span class="text-brand-purple">${labelText}</span>`;
+      }
+
+      grid.innerHTML = filtered.map(g => createGameCard(g)).join('');
     }
 
     /* ==========================================================================
-       8. RANDOM GAME GENERATOR ("SAYA BERTUAH!")
+       5. LOGIK "SAYA BERTUAH!" (RANDOM GAME GENERATOR)
        ========================================================================== */
     function triggerLuckyRandomGame() {
-      const activeGames = gamesDatabase.filter(g => g.isActive);
-
-      if (activeGames.length === 0) {
-        showToast("Tiada game aktif dalam katalog.", "error");
-        return;
+      let eligible = OFFICIAL_GAMES;
+      if (OFFICIAL_GAMES.length > 1 && lastLuckyId) {
+        eligible = OFFICIAL_GAMES.filter(g => g.id !== lastLuckyId);
       }
 
-      let eligibleGames = activeGames;
-      if (activeGames.length > 1 && lastLuckyGameId) {
-        eligibleGames = activeGames.filter(g => g.id !== lastLuckyGameId);
-      }
-
-      const randomIndex = Math.floor(Math.random() * eligibleGames.length);
-      const chosenGame = eligibleGames[randomIndex];
-      lastLuckyGameId = chosenGame.id;
+      const randomIndex = Math.floor(Math.random() * eligible.length);
+      const chosen = eligible[randomIndex];
+      lastLuckyId = chosen.id;
 
       const resultBox = document.getElementById('random-game-result');
       if (resultBox) {
-        const cuteIconHtml = getCute3DIcon(chosenGame.icon3d || 'book3d');
-        const bgGrad = chosenGame.bgGradient || 'from-purple-500 to-indigo-500';
+        const cuteIcon = getCute3DIcon(chosen.icon3d);
+        const bgGrad = chosen.bgGradient || 'from-purple-500 to-indigo-500';
 
         resultBox.innerHTML = `
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br ${bgGrad} flex items-center justify-center border-2 border-white/40 shadow-md flex-shrink-0 icon-3d-float">
-            ${cuteIconHtml}
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${bgGrad} flex items-center justify-center border border-white/40 shadow flex-shrink-0">
+            ${cuteIcon}
           </div>
           <div class="flex-grow min-w-0">
-            <span class="text-xs uppercase font-bold text-amber-300 tracking-wider">${chosenGame.category}</span>
-            <h4 class="font-extrabold text-white text-base truncate">${chosenGame.name}</h4>
-            <p class="text-xs text-purple-200 line-clamp-1">${chosenGame.description}</p>
+            <span class="text-[10px] uppercase font-bold text-amber-300 tracking-wider">${chosen.category}</span>
+            <h4 class="font-bold text-white text-sm truncate">${chosen.name}</h4>
           </div>
-          <button onclick="openGameById('${chosenGame.id}')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-pink to-brand-purple hover:scale-105 active:scale-95 text-white font-bold text-xs uppercase tracking-wider transition whitespace-nowrap shadow-lg">
+          <button onclick="openGameById('${chosen.id}')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-pink to-brand-purple hover:scale-105 active:scale-95 text-white font-bold text-xs uppercase tracking-wider transition whitespace-nowrap shadow-md">
             Main Sekarang!
           </button>
         `;
         resultBox.classList.remove('hidden');
-        resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
 
-      showToast(`Game Bertuah: ${chosenGame.name}!`, "success");
+      showToast(`Game Bertuah: ${chosen.name}!`, "success");
     }
 
     /* ==========================================================================
-       9. GAMEPLAY VIEW & EMBED RENDERING
+       6. HALAMAN KHUSUS PERMAINAN (DEDICATED GAMEPLAY VIEW)
        ========================================================================== */
     function openGameById(gameId) {
-      const game = gamesDatabase.find(g => g.id === gameId);
-      if (!game) {
-        showToast("Permainan tidak dijumpai dalam rekod.", "error");
-        return;
-      }
+      const game = OFFICIAL_GAMES.find(g => g.id === gameId);
+      if (!game) return;
 
-      activePlayingGame = game;
+      activeGamePlaying = game;
 
-      document.getElementById('home-view').classList.add('hidden');
-      document.getElementById('gameplay-view').classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Sembunyikan Header biasa, Footer biasa, dan Mobile Bottom Bar
+      document.getElementById('main-header').classList.add('hidden');
+      document.getElementById('main-footer').classList.add('hidden');
+      document.getElementById('mobile-bottom-nav').classList.add('hidden');
 
-      document.getElementById('gp-title').textContent = game.name;
-      document.getElementById('gp-description').textContent = game.description;
-      document.getElementById('gp-badge-category').textContent = game.category;
-      document.getElementById('gp-badge-diff').textContent = game.difficulty;
-      document.getElementById('gp-credits').textContent = game.credits || `Disediakan oleh ${game.creator}.`;
+      // Sembunyikan semua Tab View
+      document.getElementById('tab-view-home').classList.add('hidden');
+      document.getElementById('tab-view-all-games').classList.add('hidden');
+      document.getElementById('tab-view-categories').classList.add('hidden');
+      const otherView = document.getElementById('tab-view-other-products');
+      if (otherView) otherView.classList.add('hidden');
 
-      const extBtn = document.getElementById('gp-external-btn');
-      if (extBtn) extBtn.href = game.url;
+      // Paparkan Halaman Khusus Gameplay
+      const dedicatedView = document.getElementById('dedicated-gameplay-view');
+      dedicatedView.classList.remove('hidden');
+      document.body.classList.add('in-gameplay');
 
-      const directLink = document.getElementById('gp-direct-link');
-      if (directLink) directLink.href = game.url;
+      // Tetapkan butiran tajuk dan pautan
+      document.getElementById('gp-top-title').textContent = game.name;
+      document.getElementById('gp-meta-category').textContent = game.category;
+      document.getElementById('gp-meta-diff').textContent = game.difficulty;
+      document.getElementById('gp-meta-description').textContent = game.description;
+      document.getElementById('gp-meta-external-link').href = game.url;
 
-      const activeContainer = document.getElementById('game-active-element');
-      if (activeContainer) {
-        activeContainer.innerHTML = `
+      // Masukkan iframe permainan
+      const container = document.getElementById('game-active-iframe-container');
+      if (container) {
+        container.innerHTML = `
           <iframe 
-            id="active-game-iframe"
             src="${game.url}" 
-            title="${game.name}"
-            class="w-full h-full border-0 absolute inset-0 bg-slate-900"
-            style="width: 100%; height: 100%; min-width: 100%; min-height: 100%; border: none; display: block;"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+            title="${game.name}" 
+            class="w-full h-full border-0 absolute inset-0 bg-slate-950" 
+            style="width: 100%; height: 100%; min-width: 100%; min-height: 100%; display: block;" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" 
             allowfullscreen="true"
             webkitallowfullscreen="true"
             mozallowfullscreen="true"
@@ -1170,28 +1705,39 @@
         `;
       }
 
-      const recommendations = gamesDatabase.filter(g => g.isActive && g.id !== game.id);
-      const recGrid = document.getElementById('recommended-games-grid');
-      if (recGrid) {
-        recGrid.innerHTML = recommendations.map(g => createGameCardHtml(g)).join('');
-      }
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      showToast(`Memulakan ${game.name}`, "info");
     }
 
-    function closeGameplayView() {
+    function closeDedicatedGameplayView() {
+      // Keluar dari Mod Teater jika aktif
       const wrapper = document.getElementById('game-canvas-wrapper');
       if (wrapper && wrapper.classList.contains('game-theater-mode')) {
         toggleTheaterMode();
       }
 
-      const activeContainer = document.getElementById('game-active-element');
-      if (activeContainer) activeContainer.innerHTML = '';
-      activePlayingGame = null;
-      navigateTo('home');
+      // Hentikan iframe untuk jimat memori & audio
+      const container = document.getElementById('game-active-iframe-container');
+      if (container) container.innerHTML = '';
+      activeGamePlaying = null;
+
+      // Sembunyikan Halaman Khusus Gameplay
+      document.getElementById('dedicated-gameplay-view').classList.add('hidden');
+      document.body.classList.remove('in-gameplay');
+
+      // Paparkan semula Header biasa, Footer biasa, dan Mobile Bottom Bar
+      document.getElementById('main-header').classList.remove('hidden');
+      document.getElementById('main-footer').classList.remove('hidden');
+      document.getElementById('mobile-bottom-nav').classList.remove('hidden');
+
+      // Kembali ke tab yang aktif sebelumnya
+      switchAppTab(currentActiveTab);
+      showToast("Kembali ke Halaman Portal", "info");
     }
 
-    function restartCurrentGame() {
-      if (!activePlayingGame) return;
-      openGameById(activePlayingGame.id);
+    function restartActiveGame() {
+      if (!activeGamePlaying) return;
+      openGameById(activeGamePlaying.id);
       showToast("Permainan dimuat semula!", "info");
     }
 
@@ -1206,23 +1752,69 @@
       if (isTheater) {
         document.body.style.overflow = 'hidden';
         if (exitBtn) exitBtn.classList.remove('hidden');
-        if (btnText) btnText.textContent = "Kecilkan Skrin";
-        showToast("Mod Teater Skrin Penuh Diaktifkan", "info");
+        if (btnText) btnText.textContent = "Kecilkan";
+        showToast("Mod Teater Skrin Penuh Aktif", "info");
       } else {
         document.body.style.overflow = '';
         if (exitBtn) exitBtn.classList.add('hidden');
-        if (btnText) btnText.textContent = "Skrin Penuh (Teater)";
+        if (btnText) btnText.textContent = "Skrin Penuh";
       }
     }
 
     /* ==========================================================================
-       10. APPLICATION LIFECYCLE INITIALIZATION
+       7. SISTEM TEMA & TOAST
+       ========================================================================== */
+    function initTheme() {
+      const saved = localStorage.getItem('fgh_theme');
+      const isDark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        const icon = document.getElementById('theme-icon');
+        if (icon) icon.className = 'fa-solid fa-sun text-amber-400';
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('fgh_theme', isDark ? 'dark' : 'light');
+      const icon = document.getElementById('theme-icon');
+      if (icon) {
+        icon.className = isDark ? 'fa-solid fa-sun text-amber-400' : 'fa-solid fa-moon';
+      }
+    }
+
+    function showToast(message, type = "info") {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      const toastContent = document.getElementById('toast-content');
+      const toastIcon = document.getElementById('toast-icon');
+
+      if (!toast || !toastMessage) return;
+
+      toastMessage.textContent = message;
+
+      if (type === "success") {
+        toastContent.className = "rounded-2xl shadow-2xl p-3 flex items-center gap-3 border text-xs font-semibold bg-emerald-50 dark:bg-emerald-950 border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200";
+        toastIcon.className = "fa-solid fa-circle-check text-emerald-500 text-base";
+      } else {
+        toastContent.className = "rounded-2xl shadow-2xl p-3 flex items-center gap-3 border text-xs font-semibold bg-purple-50 dark:bg-purple-950 border-purple-300 dark:border-purple-800 text-purple-800 dark:text-purple-200";
+        toastIcon.className = "fa-solid fa-bell text-purple-500 text-base";
+      }
+
+      toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+
+    /* ==========================================================================
+       8. INITIALIZATION
        ========================================================================== */
     window.addEventListener('DOMContentLoaded', () => {
       initTheme();
-      initDatabase();
-      renderHomePageSections();
-      updateBottomNavTabs('home');
+      renderAppViews();
+      switchAppTab('home');
     });
   </script>
 </body>
